@@ -1,0 +1,616 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont,
+    "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background: #e9efec;
+  color: #20332a;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cam-life {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px 16px 110px;
+  background: #f5f8f6;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.brand h1 {
+  font-size: 23px;
+  font-weight: 800;
+  color: #087d50;
+}
+
+.brand span {
+  display: block;
+  font-size: 12px;
+  color: #718078;
+  margin-top: 5px;
+}
+
+.location {
+  font-size: 13px;
+  color: #087d50;
+  background: #e4f2e9;
+  padding: 8px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.search {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e3ebe6;
+  border-radius: 30px;
+  background: white;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 18px;
+}
+
+.search:focus {
+  border-color: #087d50;
+}
+
+.banner {
+  background: linear-gradient(135deg, #087d50, #16a36e);
+  color: white;
+  border-radius: 20px;
+  padding: 26px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 18px #087d5020;
+}
+
+.banner small {
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+.banner h2 {
+  font-size: 25px;
+  margin: 12px 0;
+}
+
+.banner p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 6px;
+  background: white;
+  padding: 22px 8px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: #20332a;
+}
+
+.service span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: #eaf5ef;
+  font-size: 27px;
+}
+
+.service p {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.service:active {
+  transform: scale(0.94);
+}
+
+.recommend {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.recommend h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.recommend p {
+  background: #f0f6f2;
+  padding: 25px 12px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 13px;
+  color: #718078;
+  margin-top: 8px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: white;
+  padding: 18px 8px;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  border-top: 1px solid #e4ebe6;
+  box-shadow: 0 -4px 20px #00000008;
+}
+
+.bottom-nav button {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #718078;
+}
+
+.bottom-nav button:first-child {
+  color: #087d50;
+  font-weight: bold;
+}
+/* CAM LIFE 三语言切换 */
+
+.language-switch {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  background: #e4ede7;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+
+.language-switch button {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 4px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #718078;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.language-switch button.active {
+  background: #087d50;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 3px 8px #087d5020;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.brand span {
+  line-height: 1.6;
+}
+
+.service {
+  min-width: 0;
+}
+
+.service p {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.bottom-nav button {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.banner h2 {
+  line-height: 1.5;
+}
+
+.cam-life[lang="km"] {
+  font-family: "Khmer Sangam MN", "Khmer MN",
+    "Noto Sans Khmer", sans-serif;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #718078;
+  padding: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 380px) {
+  .brand h1 {
+    font-size: 19px;
+  }
+
+  .location {
+    font-size: 11px;
+    padding: 7px;
+  }
+
+  .banner h2 {
+    font-size: 21px;
+  }
+}
+
+/* CAM LIFE 外卖页面样式 */
+
+.food-page {
+  padding-bottom: 30px;
+}
+
+.food-header {
+  margin-bottom: 18px;
+}
+
+.food-header h1,
+.food-header h2 {
+  color: #173c2c;
+  font-size: 26px;
+  margin: 12px 0 6px;
+}
+
+.back-btn,
+.back-button {
+  background: #e4f1e9;
+  color: #087d50;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.food-categories,
+.food-tabs,
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 18px 0;
+  padding-bottom: 5px;
+}
+
+.food-categories button,
+.food-tabs button,
+.category-tabs button {
+  border: none;
+  border-radius: 20px;
+  background: white;
+  color: #52665a;
+  padding: 10px 18px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.food-categories button.active,
+.food-tabs button.active,
+.category-tabs button.active {
+  background: #087d50;
+  color: white;
+}
+
+.store-list,
+.stores {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.store-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: white;
+  border: 1px solid #e5eee8;
+  border-radius: 18px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 4px 12px #173c2c08;
+}
+
+.store-card:active {
+  transform: scale(0.98);
+}
+
+.store-image {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6f2ea;
+  border-radius: 16px;
+  font-size: 36px;
+}
+
+.store-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.store-info h3 {
+  font-size: 17px;
+  color: #173c2c;
+  margin: 0 0 6px;
+}
+
+.store-info p {
+  font-size: 13px;
+  color: #718078;
+  margin: 5px 0;
+}
+
+.store-rating {
+  color: #e5a326;
+  font-size: 13px;
+}
+
+.store-arrow {
+  color: #087d50;
+  font-size: 24px;
+}
+
+/* CAM LIFE 商家店铺页面 */
+
+.store-page {
+  min-height: 100vh;
+  padding: 18px 16px 110px;
+  background: #f2f7f4;
+  box-sizing: border-box;
+}
+
+.store-back {
+  border: none;
+  background: transparent;
+  color: #087e51;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.store-hero {
+  background: linear-gradient(
+    135deg, #087e51, #18a36d
+  );
+  color: white;
+  padding: 24px;
+  border-radius: 22px;
+  margin: 10px 0 20px;
+  box-shadow: 0 8px 24px #087e5120;
+}
+
+.store-hero h2 {
+  font-size: 23px;
+  margin: 0 0 12px;
+  color: white;
+}
+
+.store-hero p {
+  font-size: 14px;
+  margin: 7px 0;
+  color: #e0f5e9;
+}
+
+.store-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+  scrollbar-width: none;
+}
+
+.store-tabs button {
+  flex-shrink: 0;
+  border: none;
+  background: white;
+  color: #52665b;
+  padding: 11px 17px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.store-tabs button.active {
+  background: #087e51;
+  color: white;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.product-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: white;
+  padding: 15px;
+  border-radius: 18px;
+  border: 1px solid #e5eee8;
+}
+
+.product-image {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f3ed;
+  border-radius: 15px;
+  font-size: 36px;
+}
+
+.product-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-info h3 {
+  font-size: 16px;
+  color: #203c30;
+  margin: 0 0 5px;
+}
+
+.product-info small {
+  display: block;
+  color: #87958c;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.product-info strong {
+  display: block;
+  color: #087e51;
+  font-size: 18px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #087e51;
+  color: white;
+  font-size: 20px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.quantity span {
+  color: #203c30;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.cart-bar {
+  position: fixed;
+  bottom: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 448px;
+  box-sizing: border-box;
+  background: #173d2d;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border-radius: 20px;
+  z-index: 100;
+  box-shadow: 0 8px 25px #00000020;
+}
+
+.cart-icon {
+  font-size: 27px;
+}
+
+.cart-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cart-info strong {
+  display: block;
+  color: white;
+  font-size: 22px;
+}
+
+.cart-info small {
+  display: block;
+  color: #b9d9c8;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.cart-bar button {
+  border: none;
+  border-radius: 12px;
+  background: #18a36d;
+  color: white;
+  padding: 13px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cart-bar button:disabled {
+  background: #526e60;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 380px) {
+  .product-image {
+    width: 58px;
+    height: 58px;
+    font-size: 28px;
+  }
+
+  .product-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .product-info h3 {
+    font-size: 14px;
+  }
+
+  .quantity {
+    gap: 5px;
+  }
+}

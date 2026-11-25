@@ -1,0 +1,583 @@
+/* CAM LIFE 高级版外卖页面 */
+
+.food-premium {
+  --fp-green: #124c3c;
+  --fp-dark: #103b30;
+  --fp-gold: #c5a56b;
+  --fp-text: #203e33;
+  --fp-muted: #839087;
+  min-height: 100vh;
+  background: #f5f6f1;
+  padding: 0 0 40px;
+  color: var(--fp-text);
+  box-sizing: border-box;
+}
+
+.food-premium * {
+  box-sizing: border-box;
+}
+
+.food-premium button,
+.food-premium input {
+  font: inherit;
+}
+
+.food-premium button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 顶部品牌区域 */
+
+.fp-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 22px 28px;
+  background: linear-gradient(
+    135deg,
+    #103c32 0%,
+    #17634d 65%,
+    #23806a 100%
+  );
+  border-radius: 0 0 32px 32px;
+  color: white;
+}
+
+.fp-hero::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: -130px;
+  top: -100px;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.fp-hero::after {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  right: -160px;
+  top: -130px;
+  border: 1px solid #ffffff15;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.fp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.fp-back,
+.fp-location {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border-radius: 30px;
+  border: 1px solid #ffffff25;
+  background: #ffffff12;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.fp-brand {
+  color: #e3ca98;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.fp-hero h1 {
+  font-size: 29px;
+  font-weight: 800;
+  line-height: 1.4;
+  margin: 0 0 10px;
+  color: #ffffff;
+}
+
+.fp-hero p {
+  color: #d3e5db;
+  font-size: 13px;
+  margin: 0 0 24px;
+}
+
+/* 搜索框 */
+
+.fp-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff16;
+  border: 1px solid #ffffff30;
+  border-radius: 16px;
+  color: #e1eee7;
+}
+
+.fp-search input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+}
+
+.fp-search input::placeholder {
+  color: #d3e5db;
+}
+
+.fp-search:focus-within {
+  border-color: #e3ca98;
+}
+
+/* 内容区域 */
+
+.fp-content {
+  padding: 18px 18px 30px;
+}
+
+/* 高级版拼单专区 */
+
+.fp-group {
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 23px;
+  background: linear-gradient(
+    135deg,
+    #f5eddb,
+    #e9d7b4
+  );
+  border: 1px solid #d8c39a;
+  box-shadow: 0 8px 24px #775c2410;
+  margin-bottom: 22px;
+}
+
+.fp-group-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #a48952;
+}
+
+.fp-group-top span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.fp-group h2 {
+  margin: 6px 0 8px;
+  font-size: 23px;
+  color: #174c39;
+  font-weight: 800;
+}
+
+.fp-group p {
+  margin: 0;
+  font-size: 13px;
+  color: #82745d;
+  line-height: 1.7;
+}
+
+.fp-group-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.fp-group-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 6px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform .2s ease;
+}
+
+.fp-group-actions button:first-child {
+  background: #174c39;
+  color: #ffffff;
+  border: 1px solid #174c39;
+  box-shadow: 0 5px 12px #174c3920;
+}
+
+.fp-group-actions button:last-child {
+  background: #ffffff40;
+  color: #174c39;
+  border: 1px solid #b9a77e;
+}
+
+.fp-group-actions button:active {
+  transform: scale(.97);
+}
+
+/* 美食分类 */
+
+.fp-categories {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 3px 0 10px;
+  scrollbar-width: none;
+}
+
+.fp-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.fp-categories button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 11px 17px;
+  background: #ffffff;
+  color: #62746a;
+  border: 1px solid #e8ece5;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all .2s ease;
+}
+
+.fp-categories button.active {
+  background: #174f3c;
+  color: white;
+  border-color: #174f3c;
+  box-shadow: 0 5px 12px #174f3c20;
+}
+
+/* 精选商家标题 */
+
+.fp-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0;
+}
+
+.fp-section-title h2 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #203e33;
+  margin: 0;
+}
+
+.fp-section-title svg {
+  color: #b69b63;
+}
+
+/* 商家卡片 */
+
+.fp-stores {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.fp-store {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  border: 1px solid #e6ebe3;
+  border-radius: 22px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 25px #173c3009;
+  transition: transform .2s ease,
+              box-shadow .2s ease;
+}
+
+.fp-store:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px #173c3015;
+}
+
+.fp-store:active {
+  transform: scale(.985);
+}
+
+/* 商家封面图片 */
+
+.fp-store-cover {
+  position: relative;
+  width: 100%;
+  height: 175px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    #dce9dd,
+    #a9c5ae
+  );
+  color: #46785e;
+  overflow: hidden;
+}
+
+.fp-store-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.fp-store:hover img {
+  transform: scale(1.04);
+}
+
+/* 商家评分 */
+
+.fp-rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #ffffffed;
+  color: #ad8438;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 3px 12px #00000015;
+}
+
+/* 商家信息 */
+
+.fp-store-info {
+  padding: 17px 18px;
+}
+
+.fp-store-info h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #203e33;
+  margin: 0 0 8px;
+}
+
+.fp-store-info p {
+  font-size: 12px;
+  color: #839087;
+  margin: 0 0 14px;
+}
+
+.fp-store-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #eef0eb;
+  padding-top: 12px;
+  color: #347255;
+}
+
+.fp-store-bottom span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fp-empty {
+  text-align: center;
+  padding: 35px 10px;
+  color: #839087;
+}
+
+/* 拼单弹窗背景 */
+
+.fp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background: #102c26a6;
+  backdrop-filter: blur(5px);
+  padding: 15px;
+}
+
+/* 拼单弹窗 */
+
+.fp-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+  padding-bottom: calc(
+    24px + env(safe-area-inset-bottom)
+  );
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: 0 -10px 50px #00000020;
+  animation: fp-slide-up .25s ease;
+}
+
+.fp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.fp-modal-header h2 {
+  font-size: 21px;
+  margin: 0;
+  color: #174c39;
+}
+
+.fp-modal-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f3ed;
+  color: #526b5c;
+}
+
+.fp-modal p {
+  font-size: 13px;
+  color: #78877e;
+  line-height: 1.7;
+}
+
+/* 拼单商家选择 */
+
+.fp-group-store {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 10px;
+  background: #f5f7f2;
+  border: 1px solid #e7ece4;
+  border-radius: 14px;
+  color: #174c39;
+  font-size: 14px;
+  text-align: left;
+}
+
+.fp-group-store svg:last-child {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* 拼单邀请码 */
+
+.fp-code {
+  width: 100%;
+  padding: 16px;
+  margin: 8px 0 14px;
+  border: 1px solid #dbe4d9;
+  background: #f5f7f2;
+  border-radius: 13px;
+  outline: none;
+  font-size: 15px;
+  color: #174c39;
+}
+
+.fp-code:focus {
+  border-color: #347255;
+}
+
+.fp-confirm {
+  width: 100%;
+  padding: 15px;
+  background: #174c39;
+  color: #ffffff;
+  border: none;
+  border-radius: 13px;
+  font-weight: 700;
+}
+
+.fp-confirm:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.fp-notice {
+  padding: 13px;
+  background: #f5eddb;
+  border-radius: 12px;
+  color: #8b713e !important;
+}
+
+/* 弹窗动画 */
+
+@keyframes fp-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 小屏幕适配 */
+
+@media (max-width: 380px) {
+  .fp-hero {
+    padding: 20px 16px 24px;
+  }
+
+  .fp-hero h1 {
+    font-size: 25px;
+  }
+
+  .fp-content {
+    padding: 15px 12px 25px;
+  }
+
+  .fp-group {
+    padding: 16px;
+  }
+
+  .fp-group h2 {
+    font-size: 20px;
+  }
+
+  .fp-store-cover {
+    height: 155px;
+  }
+
+  .fp-categories button {
+    padding: 10px 14px;
+  }
+}
+
+/* 减少动画模式 */
+
+@media (prefers-reduced-motion: reduce) {
+  .food-premium * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
