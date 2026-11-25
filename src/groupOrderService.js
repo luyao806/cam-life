@@ -1,6 +1,41 @@
+
 const STORAGE_KEY = 'cam-life-group-orders'
 const USER_KEY = 'cam-life-group-user'
 const TEST_USER_KEY = 'cam-life-test-user'
+
+// ======================================
+// 全平台兼容 UUID 生成方法
+// ======================================
+
+function generateUUID() {
+  const cryptoApi = globalThis.crypto
+
+  // 优先使用浏览器原生 UUID
+  if (typeof cryptoApi?.randomUUID === 'function') {
+    return cryptoApi.randomUUID()
+  }
+
+  // 兼容局域网 HTTP 和其他浏览器
+  const bytes = new Uint8Array(16)
+
+  cryptoApi.getRandomValues(bytes)
+
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+
+  const hex = Array.from(
+    bytes,
+    byte => byte.toString(16).padStart(2, '0')
+  ).join('')
+
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20, 32)
+  ].join('-')
+}
 
 // 获取当前用户身份
 export function getUserId() {
@@ -13,7 +48,7 @@ export function getUserId() {
   let id = localStorage.getItem(USER_KEY)
 
   if (!id) {
-    id = crypto.randomUUID()
+    id = generateUUID()
     localStorage.setItem(USER_KEY, id)
   }
 
@@ -25,7 +60,7 @@ export function getMainUserId() {
   let id = localStorage.getItem(USER_KEY)
 
   if (!id) {
-    id = crypto.randomUUID()
+    id = generateUUID()
     localStorage.setItem(USER_KEY, id)
   }
 
@@ -34,7 +69,7 @@ export function getMainUserId() {
 
 // 创建模拟好友身份
 export function createTestUser() {
-  const id = crypto.randomUUID()
+  const id = generateUUID()
 
   sessionStorage.setItem(TEST_USER_KEY, id)
 

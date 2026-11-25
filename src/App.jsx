@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   UtensilsCrossed,
   ShoppingBasket,
@@ -24,7 +24,13 @@ import {
 } from 'lucide-react'
 
 import Food from './pages/Food'
+import splashImage from './assets/splash.png'
 import './Premium.css'
+import {
+  initTelegram,
+  setSplashTheme,
+  setHomeTheme
+} from './telegram'
 
 const icons = [
   UtensilsCrossed,
@@ -137,7 +143,163 @@ const translations = {
   }
 }
 
+// ======================================
+// CAM LIFE 品牌启动闪屏
+// ======================================
+
+function SplashScreen({ onFinish }) {
+  const [ready, setReady] = useState(false)
+  const [leaving, setLeaving] = useState(false)
+
+  // 图片加载完成后开始3秒倒计时
+  useEffect(() => {
+    if (!ready || leaving) return
+
+    const timer = setTimeout(() => {
+      setLeaving(true)
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [ready, leaving])
+
+  // 防止图片加载异常导致无法进入首页
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLeaving(true)
+    }, 8000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // 渐隐动画完成后关闭启动封面
+  useEffect(() => {
+    if (!leaving) return
+
+    const timer = setTimeout(() => {
+      onFinish()
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [leaving, onFinish])
+
+  // 启动期间禁止背景页面滚动
+  useEffect(() => {
+    const oldOverflow = document.body.style.overflow
+
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = oldOverflow
+    }
+  }, [])
+
+  function enterApp() {
+    setLeaving(true)
+  }
+
+  return (
+    <div
+      className="cam-splash-screen"
+      role="dialog"
+      aria-modal="true"
+      aria-label="CAM LIFE Welcome"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999,
+        width: '100%',
+        height: '100%',
+        background: '#064d38',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        opacity: leaving ? 0 : 1,
+        transition: 'opacity 400ms ease',
+        touchAction: 'none'
+      }}
+    >
+
+      {/* 模糊背景，填充不同屏幕比例 */}
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: '-30px',
+          backgroundImage: `url(${splashImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(24px) brightness(0.55)',
+          transform: 'scale(1.1)'
+        }}
+      />
+
+      {/* 品牌封面及点击进入功能 */}
+
+      <button
+        type="button"
+        onClick={enterApp}
+        disabled={leaving}
+        aria-label="立即进入柬生活 · Enter CAM LIFE"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          padding: 0,
+          margin: 0,
+          border: 'none',
+          background: 'transparent',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          WebkitTapHighlightColor: 'transparent'
+        }}
+      >
+        <img
+          src={splashImage}
+          alt="柬生活 CAM LIFE 品牌启动封面"
+          onLoad={() => setReady(true)}
+          onError={enterApp}
+          loading="eager"
+          fetchPriority="high"
+          draggable={false}
+          style={{
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            userSelect: 'none'
+          }}
+        />
+      </button>
+
+    </div>
+  )
+}
+
+// ======================================
+// CAM LIFE 主应用
+// ======================================
+
 function App() {
+  const [showSplash, setShowSplash] = useState(true)
+
+useEffect(() => {
+  initTelegram()
+}, [])
+
+useEffect(() => {
+  if (showSplash) {
+    setSplashTheme()
+  } else {
+    setHomeTheme()
+  }
+}, [showSplash])
+
   const [page, setPage] = useState('home')
 
   const [lang, setLang] = useState(() => {
@@ -199,240 +361,258 @@ function App() {
   }
 
   return (
-    <div className="premium-home" lang={lang}>
+    <>
 
-      <section className="premium-hero">
+      {/* 自动启动封面 */}
 
-        <header className="premium-header">
-          <div>
-            <div className="premium-logo">
-              CAM<span>LIFE</span>
-            </div>
-
-            <div className="premium-brand-sub">
-              柬生活 · CAMBODIA
-            </div>
-          </div>
-
-          <div className="premium-location">
-            <MapPin size={15} />
-            {t.city}
-          </div>
-        </header>
-
-        <p className="premium-slogan">
-          🇰🇭 {t.slogan}
-        </p>
-
-        <div className="premium-language">
-          <Languages size={17} />
-
-          {[
-            ['zh', '中文'],
-            ['km', 'ភាសាខ្មែរ'],
-            ['en', 'English']
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              className={
-                lang === value ? 'active' : ''
-              }
-              aria-pressed={lang === value}
-              onClick={() => changeLanguage(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div className="premium-hero-content">
-          <small>WELCOME TO CAM LIFE</small>
-          <h1>{t.banner}</h1>
-          <p>{t.subtitle}</p>
-        </div>
-
-        <div className="premium-search">
-          <Search size={20} />
-
-          <input
-            placeholder={t.search}
-            aria-label={t.search}
-            value={search}
-            onChange={e =>
-              setSearch(e.target.value)
-            }
-          />
-
-          {search && (
-            <button
-              aria-label="Clear search"
-              onClick={() => setSearch('')}
-            >
-              <X size={17} />
-            </button>
-          )}
-        </div>
-
-      </section>
-
-      <main className="premium-main">
-
-        <section
-          className="premium-services"
-          id="services"
-        >
-          <div className="premium-section-title">
-            <h2>{t.serviceTitle}</h2>
-            <Sparkles size={20} />
-          </div>
-
-          <div className="premium-service-grid">
-
-            {services.map(item => (
-              <button
-                key={item.index}
-                className="premium-service"
-                onClick={() =>
-                  openService(item.index)
-                }
-              >
-                <span
-                  className={
-                    'premium-icon icon-' +
-                    item.index
-                  }
-                >
-                  <item.Icon
-                    size={27}
-                    strokeWidth={1.8}
-                  />
-                </span>
-
-                <span>{item.name}</span>
-              </button>
-            ))}
-
-            {services.length === 0 && (
-              <p className="premium-empty">
-                {t.noResults}
-              </p>
-            )}
-
-          </div>
-        </section>
-
-        <section className="premium-promo">
-
-          <div className="premium-promo-content">
-            <small>CAM LIFE SELECT</small>
-
-            <h2>{t.promoTitle}</h2>
-
-            <p>{t.promoDesc}</p>
-
-            <button
-              onClick={() => openService(0)}
-            >
-              {t.explore}
-              <ArrowRight size={15} />
-            </button>
-          </div>
-
-          <ShoppingBag
-            className="premium-decoration"
-            size={150}
-            strokeWidth={1}
-          />
-
-        </section>
-
-        <section className="premium-recommend">
-
-          <div className="premium-section-title">
-            <h2>{t.hot}</h2>
-
-            <button
-              onClick={() => openService(0)}
-              aria-label={t.explore}
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
-
-          <div className="premium-placeholder">
-            <Store
-              size={35}
-              strokeWidth={1.4}
-            />
-
-            <p>{t.empty}</p>
-          </div>
-
-        </section>
-
-      </main>
-
-      <nav className="premium-nav">
-
-        {t.nav.map((name, index) => {
-          const Icon = navIcons[index]
-
-          return (
-            <button
-              key={index}
-              className={
-                index === 0 ? 'active' : ''
-              }
-              onClick={() => {
-                if (index === 0) {
-                  setNotice('')
-                  window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                  })
-                } else if (index === 1) {
-                  setNotice('')
-                  document
-                    .getElementById('services')
-                    ?.scrollIntoView({
-                      behavior: 'smooth'
-                    })
-                } else {
-                  setNotice(
-                    name + ' · ' + t.coming
-                  )
-                }
-              }}
-            >
-              <Icon
-                size={23}
-                strokeWidth={1.8}
-              />
-
-              <span>{name}</span>
-            </button>
-          )
-        })}
-
-      </nav>
-
-      {notice && (
-        <div
-          className="premium-toast"
-          role="status"
-        >
-          <span>{notice}</span>
-
-          <button
-            aria-label="Close"
-            onClick={() => setNotice('')}
-          >
-            <X size={18} />
-          </button>
-        </div>
+      {showSplash && (
+        <SplashScreen
+          onFinish={() => setShowSplash(false)}
+        />
       )}
 
-    </div>
+      {/* 原有平台首页 */}
+
+      <div
+        className="premium-home"
+        lang={lang}
+        inert={showSplash ? true : undefined}
+        aria-hidden={showSplash ? true : undefined}
+      >
+
+        <section className="premium-hero">
+
+          <header className="premium-header">
+            <div>
+              <div className="premium-logo">
+                CAM<span>LIFE</span>
+              </div>
+
+              <div className="premium-brand-sub">
+                柬生活 · CAMBODIA
+              </div>
+            </div>
+
+            <div className="premium-location">
+              <MapPin size={15} />
+              {t.city}
+            </div>
+          </header>
+
+          <p className="premium-slogan">
+            🇰🇭 {t.slogan}
+          </p>
+
+          <div className="premium-language">
+            <Languages size={17} />
+
+            {[
+              ['zh', '中文'],
+              ['km', 'ភាសាខ្មែរ'],
+              ['en', 'English']
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                className={
+                  lang === value ? 'active' : ''
+                }
+                aria-pressed={lang === value}
+                onClick={() => changeLanguage(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="premium-hero-content">
+            <small>WELCOME TO CAM LIFE</small>
+            <h1>{t.banner}</h1>
+            <p>{t.subtitle}</p>
+          </div>
+
+          <div className="premium-search">
+            <Search size={20} />
+
+            <input
+              placeholder={t.search}
+              aria-label={t.search}
+              value={search}
+              onChange={e =>
+                setSearch(e.target.value)
+              }
+            />
+
+            {search && (
+              <button
+                aria-label="Clear search"
+                onClick={() => setSearch('')}
+              >
+                <X size={17} />
+              </button>
+            )}
+          </div>
+
+        </section>
+
+        <main className="premium-main">
+
+          <section
+            className="premium-services"
+            id="services"
+          >
+            <div className="premium-section-title">
+              <h2>{t.serviceTitle}</h2>
+              <Sparkles size={20} />
+            </div>
+
+            <div className="premium-service-grid">
+
+              {services.map(item => (
+                <button
+                  key={item.index}
+                  className="premium-service"
+                  onClick={() =>
+                    openService(item.index)
+                  }
+                >
+                  <span
+                    className={
+                      'premium-icon icon-' +
+                      item.index
+                    }
+                  >
+                    <item.Icon
+                      size={27}
+                      strokeWidth={1.8}
+                    />
+                  </span>
+
+                  <span>{item.name}</span>
+                </button>
+              ))}
+
+              {services.length === 0 && (
+                <p className="premium-empty">
+                  {t.noResults}
+                </p>
+              )}
+
+            </div>
+          </section>
+
+          <section className="premium-promo">
+
+            <div className="premium-promo-content">
+              <small>CAM LIFE SELECT</small>
+
+              <h2>{t.promoTitle}</h2>
+
+              <p>{t.promoDesc}</p>
+
+              <button
+                onClick={() => openService(0)}
+              >
+                {t.explore}
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
+            <ShoppingBag
+              className="premium-decoration"
+              size={150}
+              strokeWidth={1}
+            />
+
+          </section>
+
+          <section className="premium-recommend">
+
+            <div className="premium-section-title">
+              <h2>{t.hot}</h2>
+
+              <button
+                onClick={() => openService(0)}
+                aria-label={t.explore}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
+            <div className="premium-placeholder">
+              <Store
+                size={35}
+                strokeWidth={1.4}
+              />
+
+              <p>{t.empty}</p>
+            </div>
+
+          </section>
+
+        </main>
+
+        <nav className="premium-nav">
+
+          {t.nav.map((name, index) => {
+            const Icon = navIcons[index]
+
+            return (
+              <button
+                key={index}
+                className={
+                  index === 0 ? 'active' : ''
+                }
+                onClick={() => {
+                  if (index === 0) {
+                    setNotice('')
+                    window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                    })
+                  } else if (index === 1) {
+                    setNotice('')
+                    document
+                      .getElementById('services')
+                      ?.scrollIntoView({
+                        behavior: 'smooth'
+                      })
+                  } else {
+                    setNotice(
+                      name + ' · ' + t.coming
+                    )
+                  }
+                }}
+              >
+                <Icon
+                  size={23}
+                  strokeWidth={1.8}
+                />
+
+                <span>{name}</span>
+              </button>
+            )
+          })}
+
+        </nav>
+
+        {notice && (
+          <div
+            className="premium-toast"
+            role="status"
+          >
+            <span>{notice}</span>
+
+            <button
+              aria-label="Close"
+              onClick={() => setNotice('')}
+            >
+              <X size={18} />
+            </button>
+          </div>
+        )}
+
+      </div>
+    </>
   )
 }
 
