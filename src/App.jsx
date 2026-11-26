@@ -24,12 +24,14 @@ import {
 } from 'lucide-react'
 
 import Food from './pages/Food'
+import Profile from './pages/Profile'
 import splashImage from './assets/splash.png'
 import './Premium.css'
 import {
   initTelegram,
   setSplashTheme,
-  setHomeTheme
+  setHomeTheme,
+  loginWithTelegram
 } from './telegram'
 
 const icons = [
@@ -301,6 +303,30 @@ useEffect(() => {
 }, [showSplash])
 
   const [page, setPage] = useState('home')
+  const [account, setAccount] = useState(null)
+  const [authStatus, setAuthStatus] = useState('loading')
+
+  async function authenticate() {
+    setAuthStatus('loading')
+    setAccount(null)
+
+    try {
+      const result = await loginWithTelegram()
+
+      if (result.success && result.verified && result.user) {
+        setAccount(result.user)
+        setAuthStatus('verified')
+      } else {
+        setAuthStatus(result.guest ? 'guest' : 'error')
+      }
+    } catch {
+      setAuthStatus('error')
+    }
+  }
+
+  useEffect(() => {
+    authenticate()
+  }, [])
 
   const [lang, setLang] = useState(() => {
     const saved = localStorage.getItem(
@@ -350,6 +376,18 @@ useEffect(() => {
         .toLowerCase()
         .includes(search.toLowerCase())
     )
+
+  if (page === 'profile') {
+    return (
+      <Profile
+        lang={lang}
+        account={account}
+        status={authStatus}
+        onRetry={authenticate}
+        onBack={() => setPage('home')}
+      />
+    )
+  }
 
   if (page === 'food') {
     return (
@@ -576,6 +614,10 @@ useEffect(() => {
                       ?.scrollIntoView({
                         behavior: 'smooth'
                       })
+                  } else if (index === 3) {
+                    setNotice('')
+                    setPage('profile')
+                    window.scrollTo(0, 0)
                   } else {
                     setNotice(
                       name + ' · ' + t.coming
