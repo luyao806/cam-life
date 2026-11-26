@@ -244,6 +244,17 @@ async function getOrCreateUser(admin, telegram) {
   })
 
   if (createError) {
+    console.error('SUPABASE_CREATE_USER_ERROR', {
+      code: createError.code || 'UNKNOWN',
+      status: createError.status || null,
+      name: createError.name || 'UnknownError',
+      message: String(createError.message || '')
+        .replace(/[^\\s@]+@[^\\s@]+/g, '[REDACTED_EMAIL]')
+        .replace(/sb_secret_[A-Za-z0-9_-]+/g, '[REDACTED_KEY]')
+        .replace(/eyJ[A-Za-z0-9_.-]+/g, '[REDACTED_TOKEN]')
+        .slice(0, 300)
+    })
+
     throw new Error('ACCOUNT_CREATE_FAILED')
   }
 
