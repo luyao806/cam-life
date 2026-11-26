@@ -1,7 +1,7 @@
 
 import Store from './Store'
 import { useState, useEffect } from 'react'
-import { getRoom } from '../groupOrderService'
+import { joinRoom } from '../groupOrderService'
 import { supabase } from '../supabase'
 
 import {
@@ -176,6 +176,7 @@ export default function Food({
   const [groupMode, setGroupMode] = useState('')
   const [groupCode, setGroupCode] = useState('')
   const [notice, setNotice] = useState('')
+  const [joining, setJoining] = useState(false)
 
   const t = text[lang] || text.zh
 
@@ -308,7 +309,8 @@ export default function Food({
     setSelectedStore(store)
   }
 
-  function joinGroup() {
+  async function joinGroup() {
+    if (joining) return
     const code = groupCode.trim()
 
     if (!/^\d{6}$/.test(code)) {
@@ -316,7 +318,11 @@ export default function Food({
       return
     }
 
-    const room = getRoom(code)
+    let room
+    setJoining(true)
+    try { room = await joinRoom(code) }
+    catch (e) { setNotice(e.message === 'ROOM_NOT_FOUND' ? t.notFound : e.message === 'ROOM_CLOSED' ? t.ended : e.message); return }
+    finally { setJoining(false) }
 
     if (!room) {
       setNotice(t.notFound)
@@ -667,7 +673,7 @@ export default function Food({
 
                 <button
                   className="fp-confirm"
-                  disabled={groupCode.length !== 6}
+                  disabled={joining || groupCode.length !== 6}
                   onClick={joinGroup}
                 >
                   {t.confirm}

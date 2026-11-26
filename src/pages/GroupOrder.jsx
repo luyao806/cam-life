@@ -1,21 +1,8 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../supabase'
 
-import {
-  getUserId,
-  getRoom,
-  getRooms,
-  createRoom,
-  joinRoom,
-  updateCart,
-  confirmOrder as saveConfirmation,
-  calculateRoom,
-  finishRoom,
-  addTestMember,
-  switchUser,
-  resetUser
-} from '../groupOrderService'
+import { getUserId, getRoom, createRoom, updateCart, confirmOrder as saveConfirmation, calculateRoom, finishRoom } from '../groupOrderService'
 
 import {
   ArrowLeft,
@@ -60,7 +47,7 @@ const texts = {
     confirmed: '已确认点餐',
     payable: '个人应付',
     edit: '修改点餐',
-    finished: '拼单已结束（本地测试，未付款）',
+    finished: '拼单已结束（未付款）',
     error: '操作失败，请重新进入拼单房间',
     loading: '正在加载云端商品...',
     loadError: '云端商品加载失败',
@@ -148,7 +135,7 @@ const texts = {
     confirmed: 'Order confirmed',
     payable: 'My payment',
     edit: 'Edit order',
-    finished: 'Finished (local demo, unpaid)',
+    finished: 'Finished (unpaid)',
     error: 'Operation failed. Please try again.',
     loading: 'Loading cloud products...',
     loadError: 'Unable to load cloud products',
@@ -221,6 +208,9 @@ export default function GroupOrder({
   const [reload, setReload] = useState(0)
 
   const [roomData, setRoomData] = useState(null)
+  const busy = useRef(false)
+  const initial = useRef(null)
+  const [working, setWorking] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
   const [error, setError] = useState('')
@@ -298,104 +288,30 @@ export default function GroupOrder({
 
   useEffect(() => {
     if (loading || loadError) return
-
-    const userId = getUserId()
-
-    let existing = null
-
-    if (roomCode) {
-      const target = getRoom(roomCode)
-
-      if (
-        !target ||
-        target.status !== 'open' ||
-        target.store?.id !== store?.id
-      ) {
-        setRoomData(null)
-        setError(t.error)
-        return
-      }
-
-      if (isLegacyRoom(target)) {
-        setRoomData(null)
-        setError(t.oldRoom)
-        return
-      }
-
-      existing = joinRoom(roomCode, t.me)
-
-    } else {
-      existing = Object.values(getRooms()).find(
-        r =>
-          r.status === 'open' &&
-          r.store?.id === store?.id &&
-          !isLegacyRoom(r) &&
-          r.members.some(m => m.id === userId)
-      )
-
-      if (!existing) {
-        if (!storeOpen) {
-          setError(t.error)
-          return
-        }
-
-        existing = createRoom({
-          ...store,
-          delivery: Number(
-            store?.delivery ??
-            store?.delivery_fee ??
-            1
-          )
-        }, t.me)
-
-        const items = products
-          .filter(p => cart[p.id] > 0)
-          .map(p => ({
-            ...p,
-            quantity: cart[p.id]
-          }))
-
-        if (items.length) {
-          existing =
-            updateCart(existing.code, items) ||
-            existing
-        }
-      }
+    let cancelled = false
+    let timer
+    let polling = false
+    async function start() {
+      try {
+        if (!initial.current) initial.current = roomCode ? getRoom(roomCode) : createRoom(store)
+        const existing = await initial.current
+        if (cancelled) return
+        if (existing.store.id !== store.id) throw new Error('STORE_MISMATCH')
+        setRoomData(existing)
+        timer = setInterval(async () => {
+          if (busy.current || polling) return
+          polling = true
+          try {
+            const latest = await getRoom(existing.code)
+            if (!cancelled && !busy.current) setRoomData(latest)
+          } catch (e) { if (!cancelled) setError(t.error + ' (' + e.message + ')') }
+          finally { polling = false }
+        }, 3000)
+      } catch (e) { if (!cancelled) setError(t.error + ' (' + e.message + ')') }
     }
-
-    if (!existing) {
-      setRoomData(null)
-      setError(t.error)
-      return
-    }
-
-    setRoomData(existing)
-    setError('')
-
-    function sync(e) {
-      if (e.key === 'cam-life-group-orders') {
-        const latest = getRoom(existing.code)
-
-        setRoomData(latest)
-
-        if (!latest) {
-          setError(t.error)
-        }
-      }
-    }
-
-    window.addEventListener('storage', sync)
-
-    return () => {
-      window.removeEventListener('storage', sync)
-    }
-
-  }, [
-    store?.id,
-    roomCode,
-    loading,
-    loadError
-  ])
+    start()
+    return () => { cancelled = true; clearInterval(timer) }
+  }, [store?.id, roomCode, loading, loadError])
 
   if (loading || loadError || !roomData) {
     return (
@@ -505,52 +421,18 @@ export default function GroupOrder({
       .filter(m => m.cart.length)
       .every(m => m.confirmed)
 
-  function apply(next) {
-    if (next) {
-      setRoomData(next)
-      setError('')
-    } else {
-      setError(t.error)
-    }
-  }
-
-  function simulateFriend() {
-    if (!import.meta.env.DEV) return
-
-    const next = addTestMember(
-      room,
-      `${t.friend} ${memberCount}`
-    )
-
-    if (next) setShowMenu(false)
-
-    apply(next)
-  }
-
-  function selectMember(id) {
-    if (!import.meta.env.DEV) return
-
-    const latest = getRoom(room)
-
-    if (!latest?.members.some(m => m.id === id)) {
-      setError(t.error)
-      return
-    }
-
-    switchUser(id)
-    setShowMenu(false)
-    apply(latest)
-  }
-
-  function restoreIdentity() {
-    resetUser()
-    setShowMenu(false)
-    apply(getRoom(room))
+  async function apply(action) {
+    if (busy.current) return
+    busy.current = true
+    setWorking(true)
+    try { setRoomData(await action()); setError('') }
+    catch(e) { setError(t.error + ' (' + e.message + ')') }
+    finally { busy.current = false; setWorking(false) }
   }
 
   function changeQuantity(id, amount) {
     if (
-      confirmed ||
+      working || confirmed ||
       closed ||
       !me ||
       !storeOpen
@@ -571,7 +453,7 @@ export default function GroupOrder({
         quantity: next[p.id]
       }))
 
-    apply(updateCart(room, items))
+    apply(() => updateCart(room, items))
   }
 
   function editOrder() {
@@ -584,7 +466,7 @@ export default function GroupOrder({
         quantity: myCart[p.id]
       }))
 
-    apply(updateCart(room, items))
+    apply(() => updateCart(room, items))
     setShowMenu(true)
   }
 
@@ -604,7 +486,10 @@ export default function GroupOrder({
   }
 
   function inviteFriends() {
-    alert(t.coming)
+    const message = `CAM LIFE · ${t.room}: ${room}`
+    const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.origin) + '&text=' + encodeURIComponent(message)
+    if (window.Telegram?.WebApp?.openTelegramLink) window.Telegram.WebApp.openTelegramLink(url)
+    else window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   function confirmOrder() {
@@ -620,7 +505,7 @@ export default function GroupOrder({
       return
     }
 
-    apply(saveConfirmation(room))
+    apply(() => saveConfirmation(room))
     setShowMenu(false)
   }
 
@@ -652,7 +537,7 @@ export default function GroupOrder({
 
           <div>
             <small>
-              {t.room} · {t.demo}
+              {t.room}
             </small>
             <strong>{room}</strong>
           </div>
@@ -749,68 +634,6 @@ export default function GroupOrder({
           </button>
         )}
 
-        {import.meta.env.DEV && (
-
-          <div className="group-my-order">
-
-            <div className="group-heading">
-              <h2>{t.testTitle}</h2>
-            </div>
-
-            <p>{t.testNote}</p>
-
-            <p>
-              {t.current}: {
-                isHost
-                  ? t.host
-                  : me?.name || '—'
-              }
-            </p>
-
-            <button
-              className="group-add-food"
-              disabled={closed}
-              onClick={simulateFriend}
-            >
-              <Plus size={19} />
-              {t.addFriend}
-            </button>
-
-            {summary.members.map(member => (
-
-              <button
-                key={member.id}
-                className="group-add-food"
-                disabled={member.id === userId}
-                onClick={() => selectMember(member.id)}
-              >
-
-                {member.id === userId
-                  ? <Check size={19} />
-                  : <UserRound size={19} />
-                }
-
-                {t.switch}: {
-                  member.id === roomData.hostId
-                    ? t.host
-                    : member.name
-                }
-
-              </button>
-
-            ))}
-
-            <button
-              className="group-add-food"
-              onClick={restoreIdentity}
-            >
-              <UserRound size={19} />
-              {t.reset}
-            </button>
-
-          </div>
-
-        )}
 
         <div className="group-my-order">
 
@@ -1104,8 +927,8 @@ export default function GroupOrder({
           </button>
 
           <button
-            disabled={!canFinish}
-            onClick={() => apply(finishRoom(room))}
+            disabled={working || !canFinish}
+            onClick={() => apply(() => finishRoom(room))}
           >
             {t.finish}
           </button>
