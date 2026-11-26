@@ -25,7 +25,7 @@ const text = {
     back: '返回',
     city: '西港',
     search: '搜索餐厅、美食',
-    categories: ['全部', '中餐', '柬餐', '快餐', '饮品'],
+    all: '全部',
     delivery: '配送费',
     empty: '没有找到相关商家',
     hero: '探索西港好味道',
@@ -57,13 +57,7 @@ const text = {
     back: 'ត្រឡប់',
     city: 'ព្រះសីហនុ',
     search: 'ស្វែងរកភោជនីយដ្ឋាន និងអាហារ',
-    categories: [
-      'ទាំងអស់',
-      'ម្ហូបចិន',
-      'ម្ហូបខ្មែរ',
-      'អាហាររហ័ស',
-      'ភេសជ្ជៈ'
-    ],
+    all: 'ទាំងអស់',
     delivery: 'ថ្លៃដឹកជញ្ជូន',
     empty: 'រកមិនឃើញហាង',
     hero: 'ស្វែងរកអាហារឆ្ងាញ់នៅព្រះសីហនុ',
@@ -95,13 +89,7 @@ const text = {
     back: 'Back',
     city: 'Sihanoukville',
     search: 'Search restaurants and food',
-    categories: [
-      'All',
-      'Chinese',
-      'Khmer',
-      'Fast food',
-      'Drinks'
-    ],
+    all: 'All',
     delivery: 'Delivery fee',
     empty: 'No restaurants found',
     hero: 'Discover local flavors',
@@ -130,14 +118,12 @@ const text = {
 }
 
 // 将云端商家数据转换为现有页面需要的格式
-function formatStore(row) {
-  const isChineseDemo =
-    row.name_zh === '中华美食餐厅'
+function formatStore(row, categoryIds) {
 
   return {
     id: row.id,
 
-    category: isChineseDemo ? 1 : 0,
+    categoryIds,
 
     icon: '🍜',
 
@@ -171,6 +157,7 @@ export default function Food({
 }) {
 
   const [stores, setStores] = useState([])
+  const [cloudCategories, setCloudCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [reload, setReload] = useState(0)
@@ -184,7 +171,7 @@ export default function Food({
   const [activeRoomCode, setActiveRoomCode] =
     useState('')
 
-  const [category, setCategory] = useState(0)
+  const [category, setCategory] = useState('all')
   const [search, setSearch] = useState('')
   const [groupMode, setGroupMode] = useState('')
   const [groupCode, setGroupCode] = useState('')
@@ -225,8 +212,32 @@ export default function Food({
           throw error
         }
 
+        const [categoryResult, linkResult] = await Promise.all([
+          supabase.from('store_categories')
+            .select('id, slug, name_zh, name_km, name_en, icon, sort_order')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true }),
+          supabase.from('store_category_links')
+            .select('store_id, category_id')
+        ])
+        if (categoryResult.error) throw categoryResult.error
+        if (linkResult.error) throw linkResult.error
+
+        const categories = categoryResult.data || []
+        const activeIds = new Set(categories.map(c => c.id))
+        const links = new Map()
+        for (const link of linkResult.data || []) {
+          if (!activeIds.has(link.category_id)) continue
+          if (!links.has(link.store_id)) links.set(link.store_id, [])
+          links.get(link.store_id).push(link.category_id)
+        }
+
         if (!cancelled) {
-          setStores((data || []).map(formatStore))
+          setCloudCategories(categories)
+          setCategory(previous => activeIds.has(previous) ? previous : 'all')
+          setStores((data || []).map(row =>
+            formatStore(row, links.get(row.id) || [])
+          ))
         }
 
       } catch (error) {
@@ -234,6 +245,7 @@ export default function Food({
 
         if (!cancelled) {
           setStores([])
+          setCloudCategories([])
           setLoadError(true)
         }
 
@@ -251,9 +263,15 @@ export default function Food({
     }
   }, [reload])
 
+  const categoryName = c => c[`name_${lang}`] || c.name_zh || c.name_en
+  const categoryOptions = [
+    { id: 'all', label: t.all },
+    ...cloudCategories.map(c => ({ id: c.id, label: categoryName(c) }))
+  ]
+
   const filtered = stores.filter(store =>
-    (category === 0 ||
-      store.category === category) &&
+    (category === 'all' ||
+      store.categoryIds.includes(category)) &&
     Object.values(store.name).some(name =>
       name.toLowerCase().includes(
         search.trim().toLowerCase()
@@ -429,15 +447,15 @@ export default function Food({
 
         <div className="fp-categories">
 
-          {t.categories.map((name, index) => (
+          {categoryOptions.map(({ id, label }) => (
             <button
-              key={index}
+              key={id}
               className={
-                category === index ? 'active' : ''
+                category === id ? 'active' : ''
               }
-              onClick={() => setCategory(index)}
+              onClick={() => setCategory(id)}
             >
-              {name}
+              {label}
             </button>
           ))}
 
@@ -522,9 +540,9 @@ export default function Food({
                   </h3>
 
                   <p>
-                    {store.category
-                      ? t.categories[store.category]
-                      : t.restaurant}
+                    {cloudCategories
+                      .filter(c => store.categoryIds.includes(c.id))
+                      .map(categoryName).join(' / ') || t.restaurant}
 
                     {' · '}
 
