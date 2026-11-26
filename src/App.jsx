@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense, useCallback } from 'react'
 import {
   UtensilsCrossed,
   ShoppingBasket,
@@ -12,6 +12,7 @@ import {
   House,
   Receipt,
   UserRound,
+  MessageCircle,
   MapPin,
   Search,
   Languages,
@@ -23,10 +24,31 @@ import {
   X
 } from 'lucide-react'
 
-import Food from './pages/Food'
-import Profile from './pages/Profile'
-import splashImage from './assets/splash.png'
+const Food = lazy(() => import('./pages/Food'))
+const Profile = lazy(() => import('./pages/Profile'))
+const Messages = lazy(() => import('./pages/Messages'))
+import splashImage from './assets/splash.webp'
 import './Premium.css'
+import HomeBanner from './components/HomeBanner'
+import foodIcon from './assets/v2/icons/food.svg'
+import shoppingIcon from './assets/v2/icons/shopping.svg'
+import topupIcon from './assets/v2/icons/topup.svg'
+import dataIcon from './assets/v2/icons/data.svg'
+import gamingIcon from './assets/v2/icons/gaming.svg'
+import subscriptionIcon from './assets/v2/icons/subscription.svg'
+import deliveryIcon from './assets/v2/icons/delivery.svg'
+import groupIcon from './assets/v2/icons/group.svg'
+
+const serviceImages = [
+  foodIcon,
+  shoppingIcon,
+  topupIcon,
+  dataIcon,
+  gamingIcon,
+  subscriptionIcon,
+  deliveryIcon,
+  groupIcon
+]
 import {
   initTelegram,
   setSplashTheme,
@@ -47,8 +69,8 @@ const icons = [
 
 const navIcons = [
   House,
-  LayoutGrid,
   Receipt,
+  MessageCircle,
   UserRound
 ]
 
@@ -68,14 +90,14 @@ const translations = {
       '游戏充值',
       '数字订阅',
       '跑腿配送',
-      '更多服务'
+      '多人拼单'
     ],
     promoTitle: '发现身边的美好',
     promoDesc: '精选本地美食，享受便捷生活',
     explore: '立即探索',
     hot: '精选推荐',
     empty: '优质商家即将入驻，敬请期待！',
-    nav: ['首页', '分类', '订单', '我的'],
+    nav: ['首页', '订单', '消息', '我的'],
     coming: '即将上线',
     noResults: '没有找到相关服务'
   },
@@ -95,7 +117,7 @@ const translations = {
       'បញ្ចូលហ្គេម',
       'សេវាឌីជីថល',
       'ដឹកជញ្ជូន',
-      'សេវាផ្សេងៗ'
+      'កម្មង់ជាក្រុម'
     ],
     promoTitle: 'ស្វែងរកអ្វីល្អៗនៅជុំវិញអ្នក',
     promoDesc: 'អាហារក្នុងតំបន់ និងសេវាកម្មងាយស្រួល',
@@ -104,8 +126,8 @@ const translations = {
     empty: 'ហាងថ្មីៗនឹងមកដល់ឆាប់ៗនេះ!',
     nav: [
       'ទំព័រដើម',
-      'ប្រភេទ',
       'ការបញ្ជាទិញ',
+      'សារ',
       'គណនី'
     ],
     coming: 'នឹងមកដល់ឆាប់ៗនេះ',
@@ -127,7 +149,7 @@ const translations = {
       'Gaming',
       'Subscriptions',
       'Delivery',
-      'More'
+      'Group order'
     ],
     promoTitle: 'Discover more around you',
     promoDesc: 'Local food and convenient everyday services',
@@ -136,8 +158,8 @@ const translations = {
     empty: 'New merchants are coming soon!',
     nav: [
       'Home',
-      'Categories',
       'Orders',
+      'Messages',
       'Profile'
     ],
     coming: 'Coming soon',
@@ -159,7 +181,7 @@ function SplashScreen({ onFinish }) {
 
     const timer = setTimeout(() => {
       setLeaving(true)
-    }, 3000)
+    }, 800)
 
     return () => clearTimeout(timer)
   }, [ready, leaving])
@@ -168,7 +190,7 @@ function SplashScreen({ onFinish }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLeaving(true)
-    }, 8000)
+    }, 2500)
 
     return () => clearTimeout(timer)
   }, [])
@@ -179,7 +201,7 @@ function SplashScreen({ onFinish }) {
 
     const timer = setTimeout(() => {
       onFinish()
-    }, 400)
+    }, 220)
 
     return () => clearTimeout(timer)
   }, [leaving, onFinish])
@@ -217,25 +239,10 @@ function SplashScreen({ onFinish }) {
         justifyContent: 'center',
         overflow: 'hidden',
         opacity: leaving ? 0 : 1,
-        transition: 'opacity 400ms ease',
+        transition: 'opacity 220ms ease',
         touchAction: 'none'
       }}
     >
-
-      {/* 模糊背景，填充不同屏幕比例 */}
-
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: '-30px',
-          backgroundImage: `url(${splashImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(24px) brightness(0.55)',
-          transform: 'scale(1.1)'
-        }}
-      />
 
       {/* 品牌封面及点击进入功能 */}
 
@@ -287,8 +294,17 @@ function SplashScreen({ onFinish }) {
 // CAM LIFE 主应用
 // ======================================
 
+let splashPlayed = false
+
 function App() {
-  const [showSplash, setShowSplash] = useState(true)
+  const [showSplash, setShowSplash] = useState(
+    () => !splashPlayed
+  )
+
+  const finishSplash = useCallback(() => {
+    splashPlayed = true
+    setShowSplash(false)
+  }, [])
 
 useEffect(() => {
   initTelegram()
@@ -355,7 +371,7 @@ useEffect(() => {
   }
 
   function openService(index) {
-    if (index === 0) {
+    if (index === 0 || index === 7) {
       setNotice('')
       setPage('food')
     } else {
@@ -376,6 +392,15 @@ useEffect(() => {
         .toLowerCase()
         .includes(search.toLowerCase())
     )
+
+  if (page === 'messages') {
+    return (
+      <Messages
+        lang={lang}
+        onBack={() => setPage('home')}
+      />
+    )
+  }
 
   if (page === 'profile') {
     return (
@@ -405,7 +430,7 @@ useEffect(() => {
 
       {showSplash && (
         <SplashScreen
-          onFinish={() => setShowSplash(false)}
+          onFinish={finishSplash}
         />
       )}
 
@@ -462,11 +487,7 @@ useEffect(() => {
             ))}
           </div>
 
-          <div className="premium-hero-content">
-            <small>WELCOME TO CAM LIFE</small>
-            <h1>{t.banner}</h1>
-            <p>{t.subtitle}</p>
-          </div>
+          
 
           <div className="premium-search">
             <Search size={20} />
@@ -493,6 +514,7 @@ useEffect(() => {
         </section>
 
         <main className="premium-main">
+          <HomeBanner lang={lang} />
 
           <section
             className="premium-services"
@@ -519,9 +541,12 @@ useEffect(() => {
                       item.index
                     }
                   >
-                    <item.Icon
-                      size={27}
-                      strokeWidth={1.8}
+                    <img
+                      src={serviceImages[item.index]}
+                      alt=""
+                      width="52"
+                      height="52"
+                      draggable={false}
                     />
                   </span>
 
@@ -607,13 +632,10 @@ useEffect(() => {
                       top: 0,
                       behavior: 'smooth'
                     })
-                  } else if (index === 1) {
+                  } else if (index === 2) {
                     setNotice('')
-                    document
-                      .getElementById('services')
-                      ?.scrollIntoView({
-                        behavior: 'smooth'
-                      })
+                    setPage('messages')
+                    window.scrollTo(0, 0)
                   } else if (index === 3) {
                     setNotice('')
                     setPage('profile')
@@ -658,4 +680,42 @@ useEffect(() => {
   )
 }
 
-export default App
+function PageLoading() {
+  return (
+    <div style={{
+      minHeight: '100dvh',
+      display: 'grid',
+      placeItems: 'center',
+      background: 'radial-gradient(circle at top right, #DCEDE3, #F5F8F4 65%)',
+      color: '#064D38'
+    }}>
+      <div style={{
+        textAlign: 'center',
+        padding: 24
+      }}>
+        <div style={{
+          fontSize: 26,
+          fontWeight: 800,
+          letterSpacing: 3
+        }}>
+          CAM LIFE
+        </div>
+        <div style={{
+          marginTop: 12,
+          fontSize: 13,
+          opacity: 0.7
+        }}>
+          Loading...
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function AppRoot() {
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <App />
+    </Suspense>
+  )
+}

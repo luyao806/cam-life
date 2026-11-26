@@ -9,12 +9,29 @@ import {
   Headphones,
   ChevronRight,
   RefreshCw,
-  Sparkles
+  Wallet,
+  CookingPot,
+  Bike,
+  CircleCheck,
+  CreditCard,
+  ReceiptText,
+  Users,
+  Heart,
+  Ticket,
+  Store,
+  Handshake,
+  Info,
+  Languages,
+  FileText,
+  X
 } from 'lucide-react'
+
+import './Profile.css'
+import PaymentMethods from './payment/PaymentMethods.jsx'
 
 const texts = {
   zh: {
-    title: '个人中心',
+    title: '我的',
     guest: '游客用户',
     member: '会员编号',
     verified: '身份已验证',
@@ -22,15 +39,52 @@ const texts = {
     failed: '身份验证失败',
     telegram: '请通过 Telegram 打开柬生活',
     retry: '重新验证',
-    services: '我的服务',
     orders: '我的订单',
-    address: '收货地址',
-    gifts: '优惠福利',
-    support: '联系客服',
-    coming: '即将上线'
+    payments: '支付服务',
+    services: '生活服务',
+    platform: '平台与合作',
+    all: '全部订单',
+    coming: '功能正在开发中，敬请期待',
+    orderItems: [
+      '待付款',
+      '待接单',
+      '制作中',
+      '配送中',
+      '已完成'
+    ],
+    paymentItems: [
+      '支付方式',
+      '交易账单',
+      '退款记录'
+    ],
+    serviceItems: [
+      '我的拼单',
+      '收货地址',
+      '我的收藏',
+      '优惠券'
+    ],
+    platformItems: [
+      '商家入驻',
+      '骑手加盟',
+      '商务合作',
+      '联系客服',
+      '关于我们',
+      '语言设置',
+      '服务协议与隐私政策'
+    ],
+    slogan: '让柬埔寨生活更简单',
+    about: '柬生活 CAM LIFE 致力于打造柬埔寨一站式本地生活服务平台，连接消费者、商家与配送伙伴，让外卖、购物、充值和同城配送更加便捷。',
+    mission: '本地生活 · 便捷服务 · 合作共赢',
+    merchant: '我们欢迎本地餐厅、超市、便利店及其他生活服务商家加入柬生活，共同拓展线上业务。在线入驻申请功能正在建设中。',
+    rider: '我们欢迎同城配送伙伴加入柬生活。骑手加盟申请功能正在建设中。',
+    business: '柬生活期待与本地商家、配送团队及生活服务供应商建立长期合作。商务合作渠道正在建设中。',
+    support: '平台客服中心正在建设中。',
+    language: '目前可返回首页切换中文、柬文及英文。',
+    close: '关闭'
   },
+
   en: {
-    title: 'My Profile',
+    title: 'Profile',
     guest: 'Guest',
     member: 'Member ID',
     verified: 'Verified identity',
@@ -38,13 +92,50 @@ const texts = {
     failed: 'Verification failed',
     telegram: 'Please open CAM LIFE in Telegram',
     retry: 'Try again',
-    services: 'My services',
     orders: 'My orders',
-    address: 'Addresses',
-    gifts: 'Rewards',
-    support: 'Support',
-    coming: 'Coming soon'
+    payments: 'Payment services',
+    services: 'Lifestyle services',
+    platform: 'Platform & partners',
+    all: 'All orders',
+    coming: 'This feature is under development',
+    orderItems: [
+      'Unpaid',
+      'Pending',
+      'Preparing',
+      'Delivery',
+      'Completed'
+    ],
+    paymentItems: [
+      'Payments',
+      'Transactions',
+      'Refunds'
+    ],
+    serviceItems: [
+      'Group orders',
+      'Addresses',
+      'Favorites',
+      'Coupons'
+    ],
+    platformItems: [
+      'Become a merchant',
+      'Become a rider',
+      'Business partnerships',
+      'Customer support',
+      'About us',
+      'Language',
+      'Terms & privacy'
+    ],
+    slogan: 'Making life in Cambodia easier',
+    about: 'CAM LIFE aims to build an all-in-one local lifestyle platform in Cambodia, connecting customers, merchants and delivery partners through convenient everyday services.',
+    mission: 'Local life · Convenience · Partnership',
+    merchant: 'We welcome local restaurants, supermarkets and service providers to join CAM LIFE. Online merchant applications are under development.',
+    rider: 'We welcome local delivery partners. Rider applications are under development.',
+    business: 'CAM LIFE welcomes long-term partnerships with local merchants and service providers. Our partnership channel is under development.',
+    support: 'Our customer support center is under development.',
+    language: 'Return to the home page to change your language.',
+    close: 'Close'
   },
+
   km: {
     title: 'គណនីរបស់ខ្ញុំ',
     guest: 'ភ្ញៀវ',
@@ -54,13 +145,120 @@ const texts = {
     failed: 'ការផ្ទៀងផ្ទាត់បរាជ័យ',
     telegram: 'សូមបើក CAM LIFE ក្នុង Telegram',
     retry: 'ព្យាយាមម្តងទៀត',
-    services: 'សេវាកម្មរបស់ខ្ញុំ',
-    orders: 'ការបញ្ជាទិញ',
-    address: 'អាសយដ្ឋាន',
-    gifts: 'រង្វាន់',
-    support: 'ជំនួយ',
-    coming: 'នឹងមកដល់ឆាប់ៗនេះ'
+    orders: 'ការបញ្ជាទិញរបស់ខ្ញុំ',
+    payments: 'សេវាទូទាត់',
+    services: 'សេវាកម្មប្រចាំថ្ងៃ',
+    platform: 'វេទិកា និងដៃគូ',
+    all: 'ការបញ្ជាទិញទាំងអស់',
+    coming: 'មុខងារនេះកំពុងអភិវឌ្ឍ',
+    orderItems: [
+      'រង់ចាំទូទាត់',
+      'រង់ចាំទទួល',
+      'កំពុងរៀបចំ',
+      'កំពុងដឹក',
+      'បានបញ្ចប់'
+    ],
+    paymentItems: [
+      'ការទូទាត់',
+      'ប្រតិបត្តិការ',
+      'ការសងប្រាក់'
+    ],
+    serviceItems: [
+      'កម្មង់ជាក្រុម',
+      'អាសយដ្ឋាន',
+      'ចំណូលចិត្ត',
+      'ប័ណ្ណបញ្ចុះតម្លៃ'
+    ],
+    platformItems: [
+      'ចូលរួមជាអាជីវករ',
+      'ចូលរួមជាអ្នកដឹកជញ្ជូន',
+      'កិច្ចសហប្រតិបត្តិការ',
+      'សេវាអតិថិជន',
+      'អំពីយើង',
+      'ភាសា',
+      'លក្ខខណ្ឌ និងឯកជនភាព'
+    ],
+    slogan: 'ធ្វើឱ្យជីវិតនៅកម្ពុជាកាន់តែងាយស្រួល',
+    about: 'CAM LIFE មានគោលបំណងបង្កើតវេទិកាសេវាកម្មប្រចាំថ្ងៃនៅកម្ពុជា ដើម្បីភ្ជាប់អតិថិជន អាជីវករ និងដៃគូដឹកជញ្ជូន។',
+    mission: 'ជីវិតក្នុងស្រុក · ភាពងាយស្រួល · កិច្ចសហការ',
+    merchant: 'យើងស្វាគមន៍អាជីវករក្នុងស្រុក។ មុខងារដាក់ពាក្យកំពុងអភិវឌ្ឍ។',
+    rider: 'យើងស្វាគមន៍ដៃគូដឹកជញ្ជូន។ មុខងារដាក់ពាក្យកំពុងអភិវឌ្ឍ។',
+    business: 'យើងស្វាគមន៍កិច្ចសហប្រតិបត្តិការជាមួយដៃគូក្នុងស្រុក។',
+    support: 'មជ្ឈមណ្ឌលសេវាអតិថិជនកំពុងអភិវឌ្ឍ។',
+    language: 'សូមត្រឡប់ទៅទំព័រដើមដើម្បីប្តូរភាសា។',
+    close: 'បិទ'
   }
+}
+
+const orderIcons = [
+  Wallet,
+  Receipt,
+  CookingPot,
+  Bike,
+  CircleCheck
+]
+
+const paymentIcons = [
+  CreditCard,
+  ReceiptText,
+  RefreshCw
+]
+
+const serviceIcons = [
+  Users,
+  MapPin,
+  Heart,
+  Ticket
+]
+
+const platformIcons = [
+  Store,
+  Bike,
+  Handshake,
+  Headphones,
+  Info,
+  Languages,
+  FileText
+]
+
+function ServiceGrid({
+  labels,
+  icons,
+  colors,
+  onSelect
+}) {
+  return (
+    <div
+      className="profile-grid"
+      style={{
+        gridTemplateColumns:
+          `repeat(${labels.length}, minmax(0, 1fr))`
+      }}
+    >
+      {labels.map((label, index) => {
+        const Icon = icons[index]
+
+        return (
+          <button
+            type="button"
+            className="profile-grid-item"
+            key={index}
+            onClick={() => onSelect(label)}
+          >
+            <span
+              className={
+                'profile-grid-icon tone-' + colors[index]
+              }
+            >
+              <Icon size={23} strokeWidth={1.8}/>
+            </span>
+
+            <span>{label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function Profile({
@@ -72,8 +270,8 @@ export default function Profile({
 }) {
   const t = texts[lang] || texts.zh
 
-  const [notice, setNotice] = useState('')
-  const [avatarFailed, setAvatarFailed] = useState(false)
+  const [detail, setDetail] = useState(null)
+  const [failedAvatar, setFailedAvatar] = useState('')
 
   const verified = status === 'verified'
 
@@ -90,378 +288,308 @@ export default function Profile({
     ? account?.avatar_url || account?.photo_url
     : ''
 
-  const services = [
-    [Receipt, t.orders],
-    [MapPin, t.address],
-    [Gift, t.gifts],
-    [Headphones, t.support]
-  ]
+  function openFeature(label) {
+    if (label === t.paymentItems[0]) {
+      setDetail({ type: 'payment-methods' })
+      window.scrollTo(0, 0)
+      return
+    }
 
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: `
-          radial-gradient(
-            circle at 100% 0%,
-            #d4e8d9,
-            transparent 40%
-          ),
-          linear-gradient(
-            160deg,
-            #edf5ef,
-            #f8faf8
-          )
-        `,
-        color: '#173e31',
-        padding: '18px 16px',
-        paddingBottom:
-          'calc(32px + env(safe-area-inset-bottom))',
-        boxSizing: 'border-box'
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 600,
-          margin: '0 auto'
+    setDetail({
+      title: label,
+      body: t.coming
+    })
+
+    window.scrollTo(0, 0)
+  }
+
+  function openPlatform(index) {
+    const bodies = [
+      t.merchant,
+      t.rider,
+      t.business,
+      t.support,
+      t.about,
+      t.language,
+      t.coming
+    ]
+
+    setDetail({
+      title: t.platformItems[index],
+      body: bodies[index],
+      about: index === 4
+    })
+
+    window.scrollTo(0, 0)
+  }
+
+  if (detail?.type === 'payment-methods') {
+    return (
+      <PaymentMethods
+        lang={lang}
+        onBack={() => {
+          setDetail(null)
+          window.scrollTo(0, 0)
         }}
-      >
-        <header
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-            marginBottom: 24
-          }}
-        >
+      />
+    )
+  }
+
+  if (detail) {
+    return (
+      <div className="cam-profile" lang={lang}>
+        <header className="profile-detail-header">
           <button
             type="button"
-            onClick={onBack}
             aria-label="Back"
-            style={{
-              width: 42,
-              height: 42,
-              border: 0,
-              borderRadius: 14,
-              background: '#ffffff',
-              color: '#064d38',
-              display: 'grid',
-              placeItems: 'center',
-              cursor: 'pointer'
-            }}
+            onClick={() => setDetail(null)}
           >
-            <ArrowLeft size={22} />
+            <ArrowLeft size={23}/>
           </button>
 
-          <h2 style={{ margin: 0 }}>
-            {t.title}
-          </h2>
+          <h1>{detail.title}</h1>
         </header>
 
-        <section
-          style={{
-            position: 'relative',
-            overflow: 'hidden',
-            borderRadius: 26,
-            padding: '26px 20px',
-            color: '#ffffff',
-            background: `
-              radial-gradient(
-                circle at 100% 0%,
-                #b39b52,
-                transparent 42%
-              ),
-              linear-gradient(
-                135deg,
-                #043e2d,
-                #087c59
-              )
-            `,
-            boxShadow:
-              '0 14px 30px #064d3826',
-            border: '1px solid #c9ad69'
-          }}
-        >
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              width: 230,
-              height: 230,
-              border: '1px solid #ffffff25',
-              borderRadius: '50%',
-              right: -90,
-              top: -100,
-              boxShadow:
-                '0 0 0 24px #ffffff08, 0 0 0 48px #ffffff08',
-              pointerEvents: 'none'
-            }}
-          />
+        <main className="profile-detail-main">
 
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              color: '#f3d68d',
-              fontWeight: 800,
-              letterSpacing: 2,
-              marginBottom: 24
-            }}
-          >
-            <span>CAM LIFE</span>
-            <Sparkles size={22} />
-          </div>
-
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 15
-            }}
-          >
-            <div
-              style={{
-                width: 68,
-                height: 68,
-                flexShrink: 0,
-                borderRadius: '50%',
-                overflow: 'hidden',
-                border: '2px solid #efd18a',
-                background: '#ffffff20',
-                display: 'grid',
-                placeItems: 'center'
-              }}
-            >
-              {avatar && !avatarFailed ? (
-                <img
-                  src={avatar}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  onError={() =>
-                    setAvatarFailed(true)
-                  }
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
-              ) : (
-                <UserRound size={32} />
-              )}
-            </div>
-
-            <div
-              style={{
-                minWidth: 0,
-                overflowWrap: 'anywhere'
-              }}
-            >
-              <h2
-                style={{
-                  margin: '0 0 6px',
-                  fontSize: 22
-                }}
+          {detail.about && (
+            <section className="profile-about-brand">
+              <svg
+                viewBox="0 0 100 70"
+                width="88"
+                aria-hidden="true"
               >
-                {name}
-              </h2>
+                <g fill="#E5C989">
+                  <path d="M37 60V32H42V23L50 7L58 23V32H63V60Z"/>
+                  <path d="M13 60V40H18V31L25 18L32 31V40H37V60Z"/>
+                  <path d="M63 60V40H68V31L75 18L82 31V40H87V60Z"/>
+                  <path d="M7 60H93V65H7Z"/>
+                </g>
+              </svg>
 
-              {verified && account?.username && (
-                <div style={{ opacity: 0.8 }}>
-                  @{account.username}
-                </div>
-              )}
+              <h2>CAM LIFE</h2>
+              <p>柬生活 · CAMBODIA</p>
+              <small>{t.slogan}</small>
+            </section>
+          )}
 
-              {verified && (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 5,
-                    marginTop: 8,
-                    color: '#f3d68d',
-                    fontSize: 12
-                  }}
-                >
-                  <ShieldCheck size={15} />
-                  {t.verified}
-                </div>
-              )}
-            </div>
+          <section className="profile-detail-card">
+            <h2>{detail.title}</h2>
+            <p>{detail.body}</p>
+
+            {detail.about && (
+              <div className="profile-mission">
+                <Heart size={22}/>
+                {t.mission}
+              </div>
+            )}
+          </section>
+
+          <button
+            className="profile-primary"
+            type="button"
+            onClick={() => setDetail(null)}
+          >
+            {t.close}
+          </button>
+
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className="cam-profile" lang={lang}>
+
+      <header className="profile-header">
+
+        <div className="profile-topbar">
+          <button
+            type="button"
+            className="profile-back"
+            aria-label="Back"
+            onClick={onBack}
+          >
+            <ArrowLeft size={23}/>
+          </button>
+
+          <h1>{t.title}</h1>
+
+          <span className="profile-brand">
+            CAM LIFE
+          </span>
+        </div>
+
+        <div className="profile-identity">
+
+          <div className="profile-avatar">
+            {avatar && failedAvatar !== avatar ? (
+              <img
+                src={avatar}
+                alt=""
+                referrerPolicy="no-referrer"
+                onError={() => setFailedAvatar(avatar)}
+              />
+            ) : (
+              <UserRound size={31}/>
+            )}
           </div>
 
-          <div
-            style={{
-              position: 'relative',
-              borderTop: '1px solid #ffffff30',
-              marginTop: 24,
-              paddingTop: 18
-            }}
-          >
-            <small
-              style={{
-                color: '#e2cf9d'
-              }}
-            >
-              {t.member}
-            </small>
+          <div className="profile-user-info">
+            <h2>{name}</h2>
 
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: 700,
-                letterSpacing: 2,
-                overflowWrap: 'anywhere'
-              }}
-            >
+            {verified && account?.username && (
+              <div className="profile-username">
+                @{account.username}
+              </div>
+            )}
+
+            <p className="profile-member">
+              {t.member}：
               {verified
                 ? account?.member_no ?? '—'
                 : '—'}
-            </div>
+            </p>
+
+            {verified && (
+              <div className="profile-verified">
+                <ShieldCheck size={15}/>
+                {t.verified}
+              </div>
+            )}
           </div>
-        </section>
+        </div>
+
+      </header>
+
+      <main className="profile-main">
 
         {!verified && (
           <section
-            style={{
-              marginTop: 16,
-              padding: 18,
-              borderRadius: 18,
-              background: '#ffffff',
-              fontSize: 14
-            }}
+            className="profile-card profile-auth"
+            role="status"
           >
-            {status === 'loading'
-              ? t.loading
-              : status === 'error'
-                ? t.failed
-                : t.telegram}
+            <p>
+              {status === 'loading'
+                ? t.loading
+                : status === 'error'
+                  ? t.failed
+                  : t.telegram}
+            </p>
 
             {status === 'error' && (
               <button
                 type="button"
+                className="profile-primary"
                 onClick={onRetry}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  marginTop: 12,
-                  padding: '10px 16px',
-                  border: 0,
-                  borderRadius: 12,
-                  background: '#064d38',
-                  color: '#ffffff',
-                  cursor: 'pointer'
-                }}
               >
-                <RefreshCw size={16} />
+                <RefreshCw size={16}/>
                 {t.retry}
               </button>
             )}
           </section>
         )}
 
-        <h3
-          style={{
-            margin: '28px 0 14px'
-          }}
-        >
-          {t.services}
-        </h3>
+        <section className="profile-card">
+          <div className="profile-section-heading">
+            <h3>{t.orders}</h3>
 
-        <section
-          style={{
-            background: '#ffffff',
-            borderRadius: 22,
-            padding: '4px 16px',
-            boxShadow:
-              '0 5px 20px #064d380c'
-          }}
-        >
-          {services.map(([Icon, label], index) => (
             <button
               type="button"
-              key={index}
-              onClick={() =>
-                setNotice(label + ' · ' + t.coming)
-              }
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 14,
-                padding: '16px 0',
-                background: 'transparent',
-                border: 0,
-                borderBottom:
-                  index === services.length - 1
-                    ? 'none'
-                    : '1px solid #edf1ee',
-                color: '#173e31',
-                fontSize: 15,
-                textAlign: 'start',
-                cursor: 'pointer'
-              }}
+              className="profile-more"
+              onClick={() => openFeature(t.all)}
             >
-              <span
-                style={{
-                  display: 'grid',
-                  placeItems: 'center',
-                  width: 42,
-                  height: 42,
-                  flexShrink: 0,
-                  borderRadius: 13,
-                  background: '#e8f4ed',
-                  color: '#087c59'
-                }}
-              >
-                <Icon size={21} />
-              </span>
-
-              <span style={{ flex: 1 }}>
-                {label}
-              </span>
-
-              <ChevronRight
-                size={18}
-                color="#91a79a"
-              />
+              {t.all}
+              <ChevronRight size={15}/>
             </button>
-          ))}
+          </div>
+
+          <ServiceGrid
+            labels={t.orderItems}
+            icons={orderIcons}
+            colors={[
+              'gold',
+              'blue',
+              'orange',
+              'green',
+              'green'
+            ]}
+            onSelect={openFeature}
+          />
         </section>
 
-        {notice && (
-          <div
-            role="status"
-            style={{
-              marginTop: 16,
-              padding: 14,
-              borderRadius: 14,
-              background: '#064d38',
-              color: '#ffffff',
-              textAlign: 'center'
-            }}
-          >
-            {notice}
+        <section className="profile-card">
+          <div className="profile-section-heading">
+            <h3>{t.payments}</h3>
           </div>
-        )}
 
-        <footer
-          style={{
-            textAlign: 'center',
-            padding: '30px 0 12px',
-            color: '#80968a',
-            fontSize: 12,
-            letterSpacing: 1
-          }}
-        >
-          CAM LIFE · CAMBODIA
-          <p>Version 1.2</p>
+          <ServiceGrid
+            labels={t.paymentItems}
+            icons={paymentIcons}
+            colors={['blue', 'green', 'purple']}
+            onSelect={openFeature}
+          />
+        </section>
+
+        <section className="profile-card">
+          <div className="profile-section-heading">
+            <h3>{t.services}</h3>
+          </div>
+
+          <ServiceGrid
+            labels={t.serviceItems}
+            icons={serviceIcons}
+            colors={[
+              'green',
+              'gold',
+              'red',
+              'purple'
+            ]}
+            onSelect={openFeature}
+          />
+        </section>
+
+        <section className="profile-card">
+          <div className="profile-section-heading">
+            <h3>{t.platform}</h3>
+          </div>
+
+          <div className="profile-platform-list">
+            {t.platformItems.map((label, index) => {
+              const Icon = platformIcons[index]
+
+              return (
+                <button
+                  type="button"
+                  className="profile-platform-row"
+                  key={index}
+                  onClick={() => openPlatform(index)}
+                >
+                  <span className="profile-platform-icon">
+                    <Icon size={20} strokeWidth={1.8}/>
+                  </span>
+
+                  <span className="profile-platform-label">
+                    {label}
+                  </span>
+
+                  <ChevronRight
+                    size={17}
+                    className="profile-chevron"
+                  />
+                </button>
+              )
+            })}
+          </div>
+        </section>
+
+        <footer className="profile-footer">
+          <strong>柬生活 CAM LIFE</strong>
+          <p>{t.slogan}</p>
+          <small>Version 2.0</small>
         </footer>
-      </div>
+
+      </main>
     </div>
   )
 }

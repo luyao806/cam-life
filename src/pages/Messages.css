@@ -1,0 +1,168 @@
+/* CAM LIFE V2.0 消息中心 */
+
+.cam-messages {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding-bottom: calc(
+    40px + env(safe-area-inset-bottom, 0px)
+  );
+  color: #17352B;
+  background: linear-gradient(
+    160deg,
+    #E6F0E8,
+    #F8FAF7 60%
+  );
+}
+
+.messages-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px;
+  background: linear-gradient(
+    135deg,
+    #043D2C,
+    #087458
+  );
+  color: white;
+}
+
+.messages-header button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 13px;
+  background: #FFFFFF18;
+  color: white;
+}
+
+.messages-header h1 {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.messages-intro {
+  padding: 28px 18px;
+  text-align: center;
+}
+
+.messages-bell {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 14px;
+  border-radius: 22px;
+  color: #087F5B;
+  background: linear-gradient(
+    145deg,
+    #FFFFFF,
+    #D7E9DD
+  );
+  box-shadow: 0 6px 20px #064D3810;
+}
+
+.messages-intro small {
+  color: #A68A50;
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.messages-intro h2 {
+  margin: 9px 0;
+  font-size: 24px;
+}
+
+.messages-intro p {
+  font-size: 13px;
+  color: #72867A;
+  line-height: 1.7;
+}
+
+.messages-list {
+  margin: 0 16px;
+  padding: 0 15px;
+  background: white;
+  border: 1px solid #E5EDE7;
+  border-radius: 22px;
+  box-shadow: 0 5px 20px #064D3808;
+}
+
+.message-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 18px 0;
+  border-bottom: 1px solid #EDF1EE;
+}
+
+.message-row:last-child {
+  border-bottom: 0;
+}
+
+.message-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 15px;
+}
+
+.message-icon-0 {
+  background: #E4F3E9;
+  color: #16875B;
+}
+
+.message-icon-1 {
+  background: #E6F1FC;
+  color: #328BD0;
+}
+
+.message-icon-2 {
+  background: #FAF1DF;
+  color: #B78D38;
+}
+
+.message-icon-3 {
+  background: #F0EAF9;
+  color: #8962BD;
+}
+
+.message-icon-4 {
+  background: #FCEBE3;
+  color: #D97755;
+}
+
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-content strong {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.message-content p {
+  margin-top: 7px;
+  font-size: 12px;
+  color: #8A9B91;
+}
+
+.messages-footer {
+  padding: 26px 18px;
+  text-align: center;
+  font-size: 12px;
+  color: #82958A;
+}
+
+.cam-messages[lang="km"] {
+  font-family: "Khmer Sangam MN",
+    "Khmer MN", "Noto Sans Khmer", sans-serif;
+}

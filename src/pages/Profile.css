@@ -1,0 +1,513 @@
+/* CAM LIFE V2.0 Profile */
+
+.cam-profile {
+  --profile-green: #064D38;
+  --profile-ink: #17352B;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  color: var(--profile-ink);
+  background:
+    radial-gradient(
+      ellipse at top right,
+      #DCEBE0,
+      transparent 45%
+    ),
+    linear-gradient(
+      160deg,
+      #EDF4EF,
+      #F8FAF7
+    );
+  text-align: left;
+  font-family: -apple-system,
+    BlinkMacSystemFont,
+    "PingFang SC",
+    "Noto Sans Khmer",
+    sans-serif;
+}
+
+.cam-profile * {
+  box-sizing: border-box;
+}
+
+.cam-profile button {
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease;
+}
+
+.cam-profile button:active {
+  transform: scale(.97);
+}
+
+.cam-profile button:focus-visible {
+  outline: 2px solid #D9B76F;
+  outline-offset: 3px;
+}
+
+/* 个人资料顶部 */
+
+.profile-header {
+  padding: 18px 18px 27px;
+  background:
+    radial-gradient(
+      ellipse at top right,
+      #268165,
+      transparent 65%
+    ),
+    linear-gradient(
+      135deg,
+      #043D2C,
+      #086047
+    );
+  border-radius: 0 0 26px 26px;
+  color: #FFFFFF;
+}
+
+.profile-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 23px;
+}
+
+.profile-topbar h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 19px;
+  font-weight: 750;
+  color: white;
+}
+
+.profile-back,
+.profile-detail-header button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  background: #FFFFFF16;
+}
+
+.profile-brand {
+  color: #E5C989;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF65;
+  background: #FFFFFF18;
+  color: #FFFFFF;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.profile-user-info {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-user-info h2 {
+  margin: 0 0 6px;
+  color: #FFFFFF;
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.profile-username {
+  margin-bottom: 5px;
+  color: #C5DBCE;
+  font-size: 12px;
+}
+
+.profile-member {
+  margin: 4px 0;
+  color: #D6E8DD;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-verified {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  color: #E5C989;
+  font-size: 11px;
+}
+
+/* 内容分区 */
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  padding-bottom:
+    calc(28px + env(safe-area-inset-bottom, 0px));
+}
+
+.profile-card {
+  padding: 17px 13px;
+  border: 1px solid #E4EDE6;
+  border-radius: 20px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 15px #064D3806;
+}
+
+.profile-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 0 3px;
+}
+
+.profile-section-heading h3 {
+  margin: 0;
+  color: #17352B;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.profile-more {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #80978A;
+  font-size: 11px;
+}
+
+/* 功能图标 */
+
+.profile-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.profile-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 1px;
+  border: 0;
+  background: transparent;
+  color: #31483E;
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.profile-grid-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  max-width: 100%;
+  border-radius: 14px;
+}
+
+.tone-green {
+  color: #168D65;
+  background: #E7F4EC;
+}
+
+.tone-blue {
+  color: #328BD0;
+  background: #E7F2FC;
+}
+
+.tone-gold {
+  color: #B78D38;
+  background: #FAF2E1;
+}
+
+.tone-orange {
+  color: #D98643;
+  background: #FFF0E3;
+}
+
+.tone-purple {
+  color: #8962CC;
+  background: #F0EAF9;
+}
+
+.tone-red {
+  color: #D96865;
+  background: #FCECEB;
+}
+
+/* 平台合作列表 */
+
+.profile-platform-list {
+  padding: 0 3px;
+}
+
+.profile-platform-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 59px;
+  padding: 11px 0;
+  border: 0;
+  border-bottom: 1px solid #EDF2EE;
+  background: transparent;
+  color: #17352B;
+  text-align: start;
+}
+
+.profile-platform-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 2px;
+}
+
+.profile-platform-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #E9F4ED;
+  color: #087F5B;
+}
+
+.profile-platform-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+
+.profile-chevron {
+  flex-shrink: 0;
+  color: #91A79A;
+}
+
+/* 验证状态 */
+
+.profile-auth {
+  color: #71877A;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.profile-auth p {
+  margin: 0 0 8px;
+}
+
+.profile-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    #064D38,
+    #087F5B
+  );
+  color: white;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+/* 独立介绍页面 */
+
+.profile-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 18px;
+  background: linear-gradient(
+    135deg,
+    #043D2C,
+    #087458
+  );
+  color: #FFFFFF;
+}
+
+.profile-detail-header h1 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.profile-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 16px;
+  padding-bottom:
+    calc(30px + env(safe-area-inset-bottom, 0px));
+}
+
+.profile-about-brand {
+  padding: 32px 20px;
+  border-radius: 22px;
+  text-align: center;
+  background:
+    radial-gradient(
+      ellipse at top right,
+      #2C8063,
+      transparent 65%
+    ),
+    linear-gradient(
+      135deg,
+      #043D2C,
+      #086047
+    );
+  color: white;
+}
+
+.profile-about-brand h2 {
+  margin: 10px 0 6px;
+  color: #E5C989;
+  font-size: 29px;
+  letter-spacing: 3px;
+}
+
+.profile-about-brand p {
+  margin: 0 0 16px;
+  color: #D6E8DD;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+
+.profile-about-brand small {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.profile-detail-card {
+  padding: 22px;
+  border: 1px solid #E4EDE6;
+  border-radius: 20px;
+  background: #FFFFFF;
+}
+
+.profile-detail-card h2 {
+  margin: 0 0 15px;
+  color: #17352B;
+  font-size: 18px;
+}
+
+.profile-detail-card p {
+  margin: 0;
+  color: #526D60;
+  font-size: 14px;
+  line-height: 1.95;
+  overflow-wrap: anywhere;
+}
+
+.profile-mission {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 16px 10px;
+  border-radius: 14px;
+  background: #EAF4ED;
+  color: #087F5B;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.7;
+}
+
+/* 底部品牌信息 */
+
+.profile-footer {
+  padding: 15px 10px;
+  color: #80978A;
+  text-align: center;
+  font-size: 12px;
+}
+
+.profile-footer strong {
+  color: #648477;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.profile-footer p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.profile-footer small {
+  font-size: 10px;
+}
+
+.cam-profile[lang="km"] {
+  font-family: "Khmer Sangam MN",
+    "Khmer MN",
+    "Noto Sans Khmer",
+    sans-serif;
+}
+
+@media (max-width: 360px) {
+  .profile-main {
+    padding: 12px;
+  }
+
+  .profile-card {
+    padding: 15px 9px;
+  }
+
+  .profile-grid-icon {
+    width: 37px;
+    height: 37px;
+  }
+
+  .profile-grid-item {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cam-profile * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

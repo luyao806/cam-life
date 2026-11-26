@@ -1,19 +1,20 @@
-
-/* CAM LIFE PREMIUM DESIGN */
+/* CAM LIFE V2.0 */
 
 .premium-home {
-  --green: #084c3b;
-  --gold: #c6a46c;
+  --green: #064D38;
+  --gold: #D9B76F;
+  --ink: #17352B;
   width: 100%;
   max-width: 480px;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 0 0 110px;
-  background: #f3f6f4;
-  color: #17382e;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(ellipse at 100% 35%, #E2EFE5, transparent 45%),
+    linear-gradient(180deg, #F5F8F4, #EDF3EE);
+  color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont,
     "PingFang SC", "Noto Sans Khmer", sans-serif;
-  box-sizing: border-box;
   text-align: left;
 }
 
@@ -23,31 +24,32 @@
 
 .premium-home button {
   font-family: inherit;
+  border: 0;
   cursor: pointer;
-  border: none;
-  transition: transform .2s, background .2s;
   -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease;
 }
 
 .premium-home button:active {
-  transform: scale(.95);
+  transform: scale(.96);
 }
 
-/* 顶部品牌区域 */
+.premium-home button:focus-visible,
+.premium-home input:focus-visible {
+  outline: 2px solid #D9B76F;
+  outline-offset: 3px;
+}
+
+/* 品牌顶部 */
 
 .premium-hero {
   position: relative;
-  overflow: hidden;
-  padding: 28px 22px 36px;
+  padding: 20px 18px 20px;
   background:
-    radial-gradient(
-      circle at 100% 0%,
-      #28785b 0%,
-      transparent 48%
-    ),
-    linear-gradient(145deg, #06372b, #0b5842);
-  border-radius: 0 0 34px 34px;
-  color: #fff;
+    radial-gradient(ellipse at top right, #268165, transparent 65%),
+    linear-gradient(135deg, #043D2C, #086047);
+  color: white;
+  border-radius: 0 0 26px 26px;
 }
 
 .premium-header {
@@ -60,100 +62,76 @@
 .premium-logo {
   font-size: 29px;
   font-weight: 900;
-  letter-spacing: -1.5px;
-  line-height: 1.2;
+  letter-spacing: -.8px;
+  line-height: 1.15;
 }
 
 .premium-logo span {
-  color: #c6dfa9;
+  color: #E5C989;
 }
 
 .premium-brand-sub {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #b9d2c5;
   margin-top: 5px;
+  color: #C9DDD2;
+  font-size: 10px;
+  letter-spacing: 1.8px;
 }
 
 .premium-location {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 10px 12px;
-  border-radius: 30px;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.15);
+  max-width: 45%;
+  padding: 9px 12px;
+  border: 1px solid #FFFFFF26;
+  border-radius: 24px;
+  background: #FFFFFF12;
   font-size: 12px;
+}
+
+.premium-location svg {
+  flex-shrink: 0;
+  color: #E5C989;
 }
 
 .premium-slogan {
-  margin: 15px 0;
+  margin: 12px 0;
   font-size: 12px;
-  color: #c4d8ce;
+  color: #C7DDD0;
 }
 
-/* 三语言切换 */
+/* 三语切换 */
 
 .premium-language {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 8px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.1);
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: #FFFFFF0D;
 }
 
 .premium-language > svg {
-  color: #b9d8c4;
+  margin: 0 6px;
+  color: #C9DDD2;
   flex-shrink: 0;
 }
 
 .premium-language button {
   flex: 1;
   min-width: 0;
-  padding: 9px 4px;
-  border-radius: 10px;
+  padding: 7px 3px;
+  border-radius: 9px;
   background: transparent;
-  color: #dcebe2;
+  color: #D9E9DF;
   font-size: 12px;
 }
 
 .premium-language button.active {
-  background: #e1ecd7;
-  color: #124c38;
+  color: #064D38;
+  background: #F1E4C6;
   font-weight: 700;
-  box-shadow: 0 3px 10px #00000012;
-}
-
-/* 首页宣传区域 */
-
-.premium-hero-content {
-  margin: 30px 0 23px;
-}
-
-.premium-hero-content small {
-  color: #d5b77f;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-}
-
-.premium-hero-content h1 {
-  margin: 12px 0;
-  max-width: 340px;
-  font-size: 34px;
-  line-height: 1.3;
-  letter-spacing: -1px;
-  font-weight: 800;
-  color: #fff;
-}
-
-.premium-hero-content p {
-  margin: 0;
-  color: #c4d8ce;
-  font-size: 13px;
-  line-height: 1.7;
 }
 
 /* 搜索框 */
@@ -161,51 +139,161 @@
 .premium-search {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 15px;
-  border-radius: 17px;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.15);
-  color: #c8ded2;
+  gap: 10px;
+  padding: 13px 15px;
+  background: #FFFFFF;
+  border-radius: 15px;
+  color: #789387;
+  box-shadow: 0 4px 14px #002B2014;
+}
+
+.premium-search > svg {
+  flex-shrink: 0;
 }
 
 .premium-search input {
   width: 100%;
   min-width: 0;
-  padding: 0;
-  border: none;
-  outline: none;
+  border: 0;
+  outline: 0;
   background: transparent;
-  color: #fff;
-  font-size: 14px;
+  color: #17352B;
+  font-size: 16px;
 }
 
 .premium-search input::placeholder {
-  color: #bdd1c6;
+  color: #81938A;
+  font-size: 13px;
 }
 
 .premium-search button {
   display: flex;
-  padding: 0;
   background: transparent;
-  color: #fff;
+  color: #81938A;
 }
 
-/* 主体内容 */
+/* 首页内容 */
 
 .premium-main {
-  padding: 18px 16px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
+  padding: 16px;
 }
 
+/* 品牌宣传轮播 */
+
+.v2-banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 176px;
+  padding: 22px 18px 40px;
+  border-radius: 21px;
+  color: #FFFFFF;
+  background: linear-gradient(120deg, #123D30, #61896A);
+  box-shadow: 0 6px 18px #17352B12;
+}
+
+.v2-banner-1 {
+  background: linear-gradient(120deg, #663A22, #B98443);
+}
+
+.v2-banner-2 {
+  background: linear-gradient(120deg, #14505C, #519D99);
+}
+
+.v2-banner-art {
+  position: absolute;
+  z-index: -1;
+  right: -20px;
+  bottom: 0;
+  width: 65%;
+  height: 100%;
+  opacity: .75;
+  pointer-events: none;
+}
+
+.v2-banner-content {
+  position: relative;
+  max-width: 75%;
+}
+
+.v2-banner-content small {
+  color: #F2D69D;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.v2-banner-content h1 {
+  margin: 10px 0;
+  font-size: clamp(22px, 6vw, 29px);
+  font-weight: 800;
+  line-height: 1.4;
+  color: white;
+}
+
+.v2-banner-content p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #F1F3ED;
+}
+
+.v2-banner-controls {
+  position: absolute;
+  bottom: 7px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.v2-banner-controls > button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #FFFFFF18;
+  color: white;
+}
+
+.v2-banner-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.v2-banner-dots button {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+}
+
+.v2-banner-dots button::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 8px;
+  background: #FFFFFF70;
+}
+
+.v2-banner-dots button.active::after {
+  inset: 9px 3px;
+  background: #F5D58F;
+}
+
+/* 八大功能 */
+
 .premium-services {
-  padding: 20px 14px;
-  border-radius: 24px;
-  background: #fff;
-  border: 1px solid #e7ede8;
-  box-shadow: 0 8px 28px #153e2b08;
+  padding: 18px 10px 20px;
+  border-radius: 22px;
+  background: #FFFFFF;
+  border: 1px solid #E5EDE7;
+  box-shadow: 0 5px 20px #17352B06;
 }
 
 .premium-section-title {
@@ -213,36 +301,35 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
+}
+
+.premium-services .premium-section-title {
+  padding: 0 7px;
 }
 
 .premium-section-title h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 800;
-  color: #173b2f;
+  color: #17352B;
 }
 
 .premium-section-title > svg {
-  color: #b69b64;
+  color: #C5A36A;
 }
 
 .premium-section-title button {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 0;
   background: transparent;
-  color: #287c5a;
-  font-size: 12px;
+  color: #087F5B;
 }
-
-/* 八大服务入口 */
 
 .premium-service-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px 8px;
+  gap: 20px 5px;
 }
 
 .premium-service {
@@ -250,148 +337,111 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 7px;
   min-width: 0;
   padding: 0;
   background: transparent;
-  color: #314a40;
+  color: #31483E;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.5;
 }
 
 .premium-service > span:last-child {
+  text-align: center;
   overflow-wrap: anywhere;
 }
 
 .premium-icon {
-  width: 56px;
+  width: 60px;
+  height: 60px;
   max-width: 100%;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 19px;
-  box-shadow: inset 0 1px 2px #ffffffaa;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #FFFFFF, #F5F8F4);
 }
 
-.icon-0 {
-  background: #e3f0e5;
-  color: #207849;
-}
-
-.icon-1 {
-  background: #f7eddb;
-  color: #a47b36;
-}
-
-.icon-2 {
-  background: #e1f0ed;
-  color: #218d7b;
-}
-
-.icon-3 {
-  background: #e5edf9;
-  color: #5277b4;
-}
-
-.icon-4 {
-  background: #eee6f8;
-  color: #8560b6;
-}
-
-.icon-5 {
-  background: #f7eadf;
-  color: #b9804d;
-}
-
-.icon-6 {
-  background: #e1f1e9;
-  color: #2d8a60;
-}
-
-.icon-7 {
-  background: #e9eeeb;
-  color: #627b6d;
+.premium-icon img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .premium-empty {
   grid-column: 1 / -1;
+  padding: 15px;
   text-align: center;
   font-size: 13px;
-  color: #81948a;
+  color: #71877A;
 }
 
-/* 精选宣传卡片 */
+/* 精选宣传 */
 
 .premium-promo {
   position: relative;
   overflow: hidden;
-  padding: 24px;
-  border-radius: 25px;
+  padding: 20px;
+  border-radius: 20px;
   background:
-    radial-gradient(
-      circle at 100% 0%,
-      #c9d9af,
-      transparent 60%
-    ),
-    linear-gradient(135deg, #eaf0df, #d9e5cc);
-  border: 1px solid #d9e4cd;
+    radial-gradient(circle at top right, #EAD6A9, transparent 60%),
+    linear-gradient(135deg, #FAF6E9, #F1E8D4);
+  border: 1px solid #E8DFC9;
 }
 
 .premium-promo-content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .premium-promo small {
   font-size: 10px;
-  font-weight: 700;
   letter-spacing: 2px;
-  color: #718462;
+  font-weight: 700;
+  color: #987B46;
 }
 
 .premium-promo h2 {
-  margin: 12px 0 8px;
-  color: #214b35;
-  font-size: 23px;
-  font-weight: 800;
+  margin: 9px 0 6px;
+  font-size: 21px;
+  color: #51432D;
   line-height: 1.4;
 }
 
 .premium-promo p {
-  margin: 0 0 20px;
+  margin: 0 0 15px;
   font-size: 12px;
   line-height: 1.7;
-  color: #60785c;
+  color: #786B53;
 }
 
 .premium-promo button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 11px 17px;
-  border-radius: 30px;
-  background: #104d37;
-  color: #fff;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: 24px;
+  background: #064D38;
+  color: #FFFFFF;
   font-size: 12px;
-  font-weight: 600;
 }
 
 .premium-decoration {
   position: absolute;
-  right: -12px;
-  bottom: -10px;
-  color: #779a62;
-  opacity: .3;
+  right: -18px;
+  bottom: -22px;
+  color: #B99C63;
+  opacity: .23;
   transform: rotate(-15deg);
   pointer-events: none;
 }
 
-/* 精选推荐 */
+/* 商家推荐 */
 
 .premium-recommend {
-  padding: 0 3px;
+  padding: 0 2px;
 }
 
 .premium-placeholder {
@@ -400,22 +450,22 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  min-height: 130px;
-  padding: 24px 16px;
-  border-radius: 22px;
-  background: #fff;
-  border: 1px solid #e6ede8;
-  color: #8da99a;
+  min-height: 110px;
+  padding: 20px 15px;
+  border-radius: 18px;
+  border: 1px solid #E5EDE7;
+  background: #FFFFFF;
+  color: #87A596;
 }
 
 .premium-placeholder p {
   margin: 0;
-  color: #81948a;
   font-size: 12px;
   text-align: center;
+  color: #71877A;
 }
 
-/* 底部导航栏 */
+/* 底部导航 */
 
 .premium-nav {
   position: fixed;
@@ -427,30 +477,28 @@
   max-width: 480px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 12px 10px
-    calc(12px + env(safe-area-inset-bottom, 0px));
-  background: rgba(255,255,255,.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid #e5ebe7;
-  box-shadow: 0 -8px 30px #143d2a08;
-  border-radius: 24px 24px 0 0;
+  padding: 9px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: #FFFFFF;
+  border-top: 1px solid #E6EDE7;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -5px 24px #17352B0A;
 }
 
 .premium-nav button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-width: 0;
+  gap: 5px;
   padding: 6px 2px;
-  color: #899b91;
+  min-width: 0;
   background: transparent;
+  color: #85958C;
   font-size: 11px;
+  overflow-wrap: anywhere;
 }
 
 .premium-nav button.active {
-  color: #08784c;
+  color: #087F5B;
   font-weight: 700;
 }
 
@@ -464,69 +512,50 @@
   position: fixed;
   z-index: 200;
   left: 50%;
-  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(95px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
-  width: calc(100% - 40px);
+  width: calc(100% - 36px);
   max-width: 420px;
-  padding: 15px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  background: #103d30;
-  color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px #00000025;
+  padding: 14px 16px;
+  border-radius: 15px;
+  background: #064D38;
+  color: #FFFFFF;
+  box-shadow: 0 8px 25px #00000020;
   font-size: 13px;
 }
 
 .premium-toast button {
   display: flex;
-  padding: 0;
   background: transparent;
-  color: #fff;
+  color: white;
 }
 
-/* 页面进入动画 */
-
-.premium-services,
-.premium-promo,
-.premium-recommend {
-  animation: premium-enter .45s ease both;
-}
-
-.premium-promo {
-  animation-delay: .08s;
-}
-
-.premium-recommend {
-  animation-delay: .16s;
-}
-
-@keyframes premium-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.premium-home[lang="km"] {
+  font-family: "Khmer Sangam MN", "Khmer MN",
+    "Noto Sans Khmer", sans-serif;
 }
 
 @media (max-width: 360px) {
   .premium-hero {
-    padding: 24px 16px 30px;
+    padding: 18px 14px;
   }
 
-  .premium-hero-content h1 {
-    font-size: 28px;
+  .premium-main {
+    padding: 12px;
   }
 
   .premium-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 16px;
+    width: 49px;
+    height: 49px;
+  }
+
+  .premium-icon img {
+    width: 46px;
+    height: 46px;
   }
 
   .premium-service {
