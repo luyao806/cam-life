@@ -222,7 +222,7 @@ async function getOrCreateUser(admin, telegram) {
   const email =
     `tg_${telegramId}@cam-life.invalid`
 
-  const password = randomBytes(48)
+  const password = randomBytes(32)
     .toString('hex')
 
   const {
