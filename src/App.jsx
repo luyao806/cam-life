@@ -53,6 +53,7 @@ import {
   initTelegram,
   setSplashTheme,
   setHomeTheme,
+  getTelegramStartParam,
   loginWithTelegram
 } from './telegram'
 
@@ -319,6 +320,10 @@ useEffect(() => {
 }, [showSplash])
 
   const [page, setPage] = useState('home')
+  const [inviteCode, setInviteCode] = useState(() => {
+    const match = /^group_(\d{6})$/.exec(getTelegramStartParam())
+    return match ? match[1] : ''
+  })
   const [account, setAccount] = useState(null)
   const [authStatus, setAuthStatus] = useState('loading')
 
@@ -353,6 +358,12 @@ useEffect(() => {
       ? saved
       : 'zh'
   })
+
+  useEffect(() => {
+    if (!showSplash && authStatus === 'verified' && inviteCode) {
+      setPage('food')
+    }
+  }, [showSplash, authStatus, inviteCode])
 
   const [search, setSearch] = useState('')
   const [notice, setNotice] = useState('')
@@ -418,6 +429,8 @@ useEffect(() => {
     return (
       <Food
         lang={lang}
+        inviteCode={inviteCode}
+        onInviteConsumed={() => setInviteCode('')}
         onBack={() => setPage('home')}
       />
     )

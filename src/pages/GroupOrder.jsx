@@ -210,6 +210,8 @@ export default function GroupOrder({
   const [roomData, setRoomData] = useState(null)
   const busy = useRef(false)
   const initial = useRef(null)
+  const createdRoom = useRef(null)
+  const [roomRetry, setRoomRetry] = useState(0)
   const [working, setWorking] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
@@ -293,11 +295,38 @@ export default function GroupOrder({
     let polling = false
     async function start() {
       try {
-        if (!initial.current) initial.current = roomCode ? getRoom(roomCode) : createRoom(store)
+        if (!initial.current) {
+          initial.current = (async () => {
+            if (roomCode) return getRoom(roomCode)
+
+            if (!createdRoom.current) {
+              createdRoom.current = await createRoom(store)
+            }
+
+            const created = createdRoom.current
+
+            const items = products
+              .filter(p => Number.isInteger(cart[p.id]) && cart[p.id] > 0)
+              .map(p => ({
+                ...p,
+                quantity: cart[p.id]
+              }))
+
+            if (items.length > 0) {
+              return updateCart(created.code, items)
+            }
+
+            return created
+          })().catch(e => {
+            initial.current = null
+            throw e
+          })
+        }
         const existing = await initial.current
         if (cancelled) return
         if (existing.store.id !== store.id) throw new Error('STORE_MISMATCH')
         setRoomData(existing)
+        setError('')
         timer = setInterval(async () => {
           if (busy.current || polling) return
           polling = true
@@ -311,7 +340,7 @@ export default function GroupOrder({
     }
     start()
     return () => { cancelled = true; clearInterval(timer) }
-  }, [store?.id, roomCode, loading, loadError])
+  }, [store?.id, roomCode, loading, loadError, roomRetry])
 
   if (loading || loadError || !roomData) {
     return (
@@ -340,6 +369,18 @@ export default function GroupOrder({
                 ? t.loadError
                 : error || 'CAM LIFE...'}
           </p>
+
+          {!loading && !loadError && error && (
+            <button
+              className="group-invite"
+              onClick={() => {
+                setError('')
+                setRoomRetry(n => n + 1)
+              }}
+            >
+              {t.retry}
+            </button>
+          )}
 
           {loadError && (
             <button
@@ -487,7 +528,7 @@ export default function GroupOrder({
 
   function inviteFriends() {
     const message = `CAM LIFE · ${t.room}: ${room}`
-    const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.origin) + '&text=' + encodeURIComponent(message)
+    const url = 'https://t.me/share/url?url=' + encodeURIComponent('https://t.me/CamLifeServiceBot?startapp=group_' + room) + '&text=' + encodeURIComponent(message)
     if (window.Telegram?.WebApp?.openTelegramLink) window.Telegram.WebApp.openTelegramLink(url)
     else window.open(url, '_blank', 'noopener,noreferrer')
   }

@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { loginWithTelegram } from './authService'
+import { loginWithTelegram } from './telegram'
 let userId = null
 export function getUserId() { return userId }
 async function rpc(name, args) {

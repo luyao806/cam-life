@@ -342,10 +342,6 @@ export default function Store({
   function startGroup() {
     if (!storeOpen) return
 
-    if (count > 0 && !window.confirm(t.groupNotice)) {
-      return
-    }
-
     setActiveRoomCode('')
     setShowGroup(true)
   }
@@ -375,8 +371,8 @@ export default function Store({
       <GroupOrder
         lang={lang}
         store={store}
-        cart={{}}
-        subtotal={0}
+        cart={activeRoomCode ? {} : cart}
+        subtotal={subtotal}
         roomCode={activeRoomCode}
         onBack={() => {
           setShowGroup(false)

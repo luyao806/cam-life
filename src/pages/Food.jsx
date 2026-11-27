@@ -153,6 +153,8 @@ function formatStore(row, categoryIds) {
 
 export default function Food({
   lang = 'zh',
+  inviteCode = '',
+  onInviteConsumed,
   onBack
 }) {
 
@@ -309,9 +311,19 @@ export default function Food({
     setSelectedStore(store)
   }
 
-  async function joinGroup() {
+  useEffect(() => {
+    if (!inviteCode || loading || loadError) return
+    setGroupCode(inviteCode)
+    setGroupMode('join')
+    onInviteConsumed?.()
+    joinGroup(inviteCode)
+  }, [inviteCode, loading, loadError])
+
+  async function joinGroup(invitedCode) {
     if (joining) return
-    const code = groupCode.trim()
+    const code = (
+      typeof invitedCode === 'string' ? invitedCode : groupCode
+    ).trim()
 
     if (!/^\d{6}$/.test(code)) {
       setNotice(t.invalid)
