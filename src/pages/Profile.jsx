@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   MapPin,
   Receipt,
-  Gift,
   Headphones,
   ChevronRight,
   RefreshCw,
@@ -22,8 +21,7 @@ import {
   Handshake,
   Info,
   Languages,
-  FileText,
-  X
+  FileText
 } from 'lucide-react'
 
 import './Profile.css'

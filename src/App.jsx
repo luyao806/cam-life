@@ -1,3 +1,4 @@
+import { preloadStoreCatalog } from './storeCatalog'
 
 import { useState, useEffect, lazy, Suspense, useCallback } from 'react'
 import {
@@ -24,7 +25,7 @@ import {
   X
 } from 'lucide-react'
 
-const Food = lazy(() => import('./pages/Food'))
+import Food from './pages/Food'
 const Profile = lazy(() => import('./pages/Profile'))
 const Messages = lazy(() => import('./pages/Messages'))
 import splashImage from './assets/splash.webp'
@@ -348,6 +349,12 @@ useEffect(() => {
   useEffect(() => {
     authenticate()
   }, [])
+
+  useEffect(() => {
+    if (authStatus === 'verified' || authStatus === 'guest') {
+      preloadStoreCatalog()
+    }
+  }, [authStatus])
 
   const [lang, setLang] = useState(() => {
     const saved = localStorage.getItem(

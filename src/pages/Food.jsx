@@ -1,8 +1,8 @@
+import { loadStoreCatalog, getCachedStoreCatalog } from '../storeCatalog'
 
 import Store from './Store'
 import { useState, useEffect } from 'react'
 import { joinRoom } from '../groupOrderService'
-import { supabase } from '../supabase'
 
 import {
   ArrowLeft,
@@ -158,9 +158,32 @@ export default function Food({
   onBack
 }) {
 
-  const [stores, setStores] = useState([])
-  const [cloudCategories, setCloudCategories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [initialCatalog] = useState(() => {
+    const saved = getCachedStoreCatalog()
+    if (!saved) return null
+
+    const categories = saved.categoryResult.data || []
+    const activeIds = new Set(categories.map(c => c.id))
+    const links = new Map()
+
+    for (const link of saved.linkResult.data || []) {
+      if (!activeIds.has(link.category_id)) continue
+      if (!links.has(link.store_id)) links.set(link.store_id, [])
+      links.get(link.store_id).push(link.category_id)
+    }
+
+    return {
+      categories,
+      stores: (saved.storeResult.data || []).map(row =>
+        formatStore(row, links.get(row.id) || [])
+      )
+    }
+  })
+
+  const [stores, setStores] = useState(initialCatalog?.stores || [])
+  const [cloudCategories, setCloudCategories] =
+    useState(initialCatalog?.categories || [])
+  const [loading, setLoading] = useState(!initialCatalog)
   const [loadError, setLoadError] = useState(false)
   const [reload, setReload] = useState(0)
 
@@ -187,44 +210,15 @@ export default function Food({
     let cancelled = false
 
     async function loadStores() {
-      setLoading(true)
+      if (!getCachedStoreCatalog() || reload > 0) {
+        setLoading(true)
+      }
       setLoadError(false)
 
       try {
-        const { data, error } = await supabase
-          .from('stores')
-          .select(`
-            id,
-            name_zh,
-            name_km,
-            name_en,
-            description,
-            image_url,
-            delivery_fee,
-            is_active,
-            is_open,
-            city,
-            address,
-            phone
-          `)
-          .eq('is_active', true)
-          .eq('city', 'Sihanoukville')
-          .order('name_zh', { ascending: true })
-
-        if (error) {
-          throw error
-        }
-
-        const [categoryResult, linkResult] = await Promise.all([
-          supabase.from('store_categories')
-            .select('id, slug, name_zh, name_km, name_en, icon, sort_order')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true }),
-          supabase.from('store_category_links')
-            .select('store_id, category_id')
-        ])
-        if (categoryResult.error) throw categoryResult.error
-        if (linkResult.error) throw linkResult.error
+        const { storeResult, categoryResult, linkResult } =
+          await loadStoreCatalog(reload > 0)
+        const data = storeResult.data
 
         const categories = categoryResult.data || []
         const activeIds = new Set(categories.map(c => c.id))
@@ -485,9 +479,32 @@ export default function Food({
         </div>
 
         {loading && (
-          <p className="fp-empty" role="status">
-            {t.loading}
-          </p>
+          <div
+            className="fp-stores fp-skeleton-list"
+            role="status"
+            aria-label={t.loading}
+            aria-busy="true"
+          >
+            {Array.from({ length: 3 }, (_, index) => (
+              <div
+                className="fp-store fp-skeleton-card"
+                key={index}
+                aria-hidden="true"
+              >
+                <div className="fp-store-cover fp-skeleton-block" />
+
+                <div className="fp-store-info">
+                  <div className="fp-skeleton-title fp-skeleton-block" />
+                  <div className="fp-skeleton-description fp-skeleton-block" />
+
+                  <div className="fp-store-bottom">
+                    <div className="fp-skeleton-delivery fp-skeleton-block" />
+                    <div className="fp-skeleton-arrow fp-skeleton-block" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
 
         {!loading && loadError && (
@@ -510,7 +527,7 @@ export default function Food({
         {!loading && !loadError && (
           <div className="fp-stores">
 
-            {filtered.map(store => (
+            {filtered.map((store, index) => (
               <button
                 className="fp-store"
                 key={store.id}
@@ -529,7 +546,9 @@ export default function Food({
                         store.name[lang] ||
                         store.name.zh
                       }
-                      loading="lazy"
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                      fetchPriority={index === 0 ? 'high' : 'auto'}
+                      decoding="async"
                       onError={e => {
                         e.currentTarget.style.display =
                           'none'
